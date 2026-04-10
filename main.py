@@ -1,5 +1,5 @@
 import pygame
-from Model.Road import Road
+from models.Road import Road
 
 road=Road()
 
