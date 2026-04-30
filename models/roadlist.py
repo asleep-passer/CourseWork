@@ -54,7 +54,7 @@ class RoadListModel(ABC):
         Args:
             road (RoadModel): The road to be stored. 
         """
-        for exist_road in self._road_list[road.road_type].values():
+        for exist_road in self._road_list[road.road_type]:
             if exist_road is road:
                 return
         self._road_num[road.road_type]+=1
