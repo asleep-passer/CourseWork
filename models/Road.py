@@ -14,8 +14,8 @@ class RoadModel:
 
     Attributes:
         road_type (RoadType):                       The type of road.
-        passable_direction (Tuple[Direction, ...]): The directions that the road can reach.
-        roated (int):                               The number of times the road has been rotated.
+        __passable_direction (Tuple[Direction, ...]): The directions that the road can reach.
+        __roated (int):                               The number of times the road has been rotated.
     """
     class RoadType(Enum):
         OBSTACLE_ROAD=0
@@ -38,17 +38,17 @@ class RoadModel:
 
         #Set the directions that the road can reach depending on the type of road.
         if road_type==self.RoadType.OBSTACLE_ROAD:
-            self.passable_direction=()
+            self.__passable_direction=()
         elif road_type==self.RoadType.STRAIGHT_ROAD:
-            self.passable_direction=(Direction.UP,Direction.DOWN)
+            self.__passable_direction=(Direction.UP,Direction.DOWN)
         elif road_type==self.RoadType.BEND_ROAD:
-            self.passable_direction=(Direction.UP,Direction.RIGHT)
+            self.__passable_direction=(Direction.UP,Direction.RIGHT)
         elif road_type==self.RoadType.T_SHAPED_ROAD:
-            self.passable_direction=(Direction.UP,Direction.RIGHT,Direction.LEFT)
+            self.__passable_direction=(Direction.UP,Direction.RIGHT,Direction.LEFT)
         else:
-            self.passable_direction=(Direction.UP,Direction.RIGHT,Direction.DOWN,Direction.LEFT)
+            self.__passable_direction=(Direction.UP,Direction.RIGHT,Direction.DOWN,Direction.LEFT)
 
-        self.rotated=0
+        self.__rotated=0
 
         print(f"A {self.road_type} is created.")
 
@@ -62,8 +62,8 @@ class RoadModel:
 
         cur_passable_direction=[]
 
-        for dir in self.passable_direction:
-            cur_passable_direction.append(Direction((dir.value+self.rotated)%4))
+        for dir in self.__passable_direction:
+            cur_passable_direction.append(Direction((dir.value+self.__rotated)%4))
         
         return tuple(cur_passable_direction)
     
@@ -71,13 +71,13 @@ class RoadModel:
         """
         Rotate the road clockwise by 90 degrees.
         """
-        self.rotated+=1
+        self.__rotated+=1
 
     def reset(self):
         """
         Reset the attributes of the road.
         """
-        self.rotated=0
+        self.__rotated=0
 
 
         
