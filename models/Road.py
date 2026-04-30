@@ -22,7 +22,7 @@ class RoadModel:
     destination information, and reset function.
 
     Attributes:
-        road_type (RoadType):                       The type of road.
+        road_type (RoadType):                         The type of road.
         __passable_direction (Tuple[Direction, ...]): The directions that the road can reach.
         __roated (int):                               The number of times the road has been rotated.
     """
