@@ -6,6 +6,15 @@ class Direction(Enum):
     DOWN= 2
     LEFT= 3
 
+class RoadType(Enum):
+        OBSTACLE_ROAD=0
+        STRAIGHT_ROAD=1
+        BEND_ROAD=    2
+        T_SHAPED_ROAD=3
+        CROSS_ROAD=   4
+        START_ROAD=   5
+        END_ROAD=     6
+
 class RoadModel:
     """
     Define the road, 
@@ -17,14 +26,7 @@ class RoadModel:
         __passable_direction (Tuple[Direction, ...]): The directions that the road can reach.
         __roated (int):                               The number of times the road has been rotated.
     """
-    class RoadType(Enum):
-        OBSTACLE_ROAD=0
-        STRAIGHT_ROAD=1
-        BEND_ROAD=    2
-        T_SHAPED_ROAD=3
-        CROSS_ROAD=   4
-        START_ROAD=   5
-        END_ROAD=     6
+    
 
     def __init__(self,road_type:RoadType) -> None:
         """
@@ -37,13 +39,13 @@ class RoadModel:
         self.road_type=road_type
 
         #Set the directions that the road can reach depending on the type of road.
-        if road_type==self.RoadType.OBSTACLE_ROAD:
+        if road_type==RoadType.OBSTACLE_ROAD:
             self.__passable_direction=()
-        elif road_type==self.RoadType.STRAIGHT_ROAD:
+        elif road_type==RoadType.STRAIGHT_ROAD:
             self.__passable_direction=(Direction.UP,Direction.DOWN)
-        elif road_type==self.RoadType.BEND_ROAD:
+        elif road_type==RoadType.BEND_ROAD:
             self.__passable_direction=(Direction.UP,Direction.RIGHT)
-        elif road_type==self.RoadType.T_SHAPED_ROAD:
+        elif road_type==RoadType.T_SHAPED_ROAD:
             self.__passable_direction=(Direction.UP,Direction.RIGHT,Direction.LEFT)
         else:
             self.__passable_direction=(Direction.UP,Direction.RIGHT,Direction.DOWN,Direction.LEFT)
