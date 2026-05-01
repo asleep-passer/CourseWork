@@ -1,39 +1,40 @@
-import pygame
-import models
-import config
+from models.Road import RoadModel, RoadType
+from models.map import MapModel
+from models.roadcell import RoadCellModel
 
-pygame.init()
-mainScreen=pygame.display.set_mode(config.screenSize)
-isRunning=True
-clock = pygame.time.Clock()
-dt=0
-player_pos = pygame.Vector2(mainScreen.get_width() / 2, mainScreen.get_height() / 2)
-while isRunning:
-    for event in pygame.event.get():
-        if event.type==pygame.QUIT:
-            isRunning=False
-            break
-    mainScreen.fill("purple")
+def create_4x4_grid() -> MapModel:
+    """
+    Create and initialize a 4x4 grid with roads.
+    """
+    map_model = MapModel(4, 4)
 
-    pygame.draw.circle(mainScreen, "red", player_pos, 40)
+    # Initialize the grid with some road types for example
+    for row in range(4):
+        for col in range(4):
+            # You can customize which roads to place where
+            if (row == 0 and col == 0):
+                map_model.set_cell(row, col, RoadCellModel(row, col, RoadType.START_ROAD))
+            elif (row == 3 and col == 3):
+                map_model.set_cell(row, col, RoadCellModel(row, col, RoadType.END_ROAD))
+            else:
+                map_model.set_cell(row, col, RoadCellModel(row, col, RoadType.STRAIGHT_ROAD))
 
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_w]:
-        player_pos.y -= 300 * dt
-    if keys[pygame.K_s]:
-        player_pos.y += 300 * dt
-    if keys[pygame.K_a]:
-        player_pos.x -= 300 * dt
-    if keys[pygame.K_d]:
-        player_pos.x += 300 * dt
+    return map_model
 
-    # flip() the display to put your work on screen
-    pygame.display.flip()
+def main():
+    # Create the 4x4 grid with roads
+    map_model = create_4x4_grid()
 
-    # limits FPS to 60
-    # dt is delta time in seconds since last frame, used for framerate-
-    # independent physics.
-    dt = clock.tick(60) / 1000
+    # Print the grid (just for checking)
+    map_model.print_grid()
 
-pygame.quit()
+    # Example: Rotate a road at (0, 1)
+    road_cell = map_model.get_cell(0, 1)
+    road_cell.rotate()
 
+    # Print the grid after rotation
+    print("\nAfter rotating:")
+    map_model.print_grid()
+
+if __name__ == "__main__":
+    main()
