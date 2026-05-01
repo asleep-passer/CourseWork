@@ -1,6 +1,7 @@
 import pygame
-from models.Road import RoadType, RoadModel
+from models.Road import RoadType
 from models.roadlist import RoadListModel
+import os
 
 class InventoryView:
     def __init__(self, x, y, screen):
@@ -12,28 +13,61 @@ class InventoryView:
         self.font = pygame.font.Font(None, 18)
         self.display_types = [RoadType.STRAIGHT_ROAD, RoadType.BEND_ROAD,
                               RoadType.T_SHAPED_ROAD, RoadType.CROSS_ROAD]
+        self.previews = {}
+        self._load_previews()
+
+    def _load_previews(self):
+        base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        img_map = {
+            RoadType.STRAIGHT_ROAD: "roadTile27.png",
+            RoadType.BEND_ROAD: "roadTile7.png",
+            RoadType.T_SHAPED_ROAD: "roadTile9.png",
+            RoadType.CROSS_ROAD: "roadTile5.png",
+        }
+        size = 50   # 预览图稍小一点，避免挤压
+        for rt, fname in img_map.items():
+            try:
+                img = pygame.image.load(os.path.join(base_path, "view/assets/Legacy/PNG", fname)).convert_alpha()
+                self.previews[rt] = pygame.transform.smoothscale(img, (size, size))
+            except:
+                self.previews[rt] = None
 
     def update_from_model(self, road_list):
         self.buttons.clear()
+        # 竖排：每个按钮高度 80，垂直间距 90 足够
+        spacing = 90
         for i, rt in enumerate(self.display_types):
-            rect = pygame.Rect(self.x + i*90, self.y, 80, 80)
+            rect = pygame.Rect(self.x, self.y + i * spacing, 80, 80)
             count = road_list.get_road_num(rt)
             self.buttons.append((rect, rt, count))
 
     def draw(self):
         for rect, rt, count in self.buttons:
-            color = (180,180,180) if count == 0 else (240,240,240)
-            if rt == self.selected_type:
-                color = (100,200,100)
+            # 背景色
+            if count == 0:
+                color = (180, 180, 180)
+            elif rt == self.selected_type:
+                color = (100, 200, 100)   # 选中高亮
+            else:
+                color = (240, 240, 240)
             pygame.draw.rect(self.screen, color, rect)
-            pygame.draw.rect(self.screen, (0,0,0), rect, 2)
-            text = self.font.render(rt.name.replace("_ROAD",""), True, (0,0,0))
-            self.screen.blit(text, (rect.x+5, rect.y+5))
-            count_text = self.font.render(str(count), True, (0,0,0))
-            self.screen.blit(count_text, (rect.x+5, rect.y+25))
+            pygame.draw.rect(self.screen, (0, 0, 0), rect, 2)
+
+            # 预览图（居中）
+            if rt in self.previews and self.previews[rt] is not None:
+                preview = self.previews[rt]
+                preview_rect = preview.get_rect(center=rect.center)
+                self.screen.blit(preview, preview_rect)
+            else:
+                text = self.font.render(rt.name.replace("_ROAD",""), True, (0, 0, 0))
+                text_rect = text.get_rect(center=rect.center)
+                self.screen.blit(text, text_rect)
+
+            # 数量显示在右上角
+            count_text = self.font.render(str(count), True, (255, 255, 255), (0, 0, 0))
+            self.screen.blit(count_text, (rect.right - 25, rect.top + 2))
 
     def handle_click(self, pos):
-        """左键点击选中道具类型"""
         for rect, rt, count in self.buttons:
             if rect.collidepoint(pos) and count != 0:
                 self.selected_type = rt
@@ -41,7 +75,6 @@ class InventoryView:
         return None
 
     def get_road_type_at(self, pos):
-        """返回鼠标位置下的道具类型，如果有货；用于拖拽开始"""
         for rect, rt, count in self.buttons:
             if rect.collidepoint(pos) and count != 0:
                 return rt

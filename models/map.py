@@ -56,15 +56,39 @@ class MapModel:
         if (row, col) == end_pos:
             return True
         visited.add((row, col))
+
+        # 双向连通检查：必须下一个格子能反过来接当前方向
         for direction in current_cell.get_passable_directions():
             nr, nc = row, col
-            if direction == Direction.UP:    nr -= 1
-            elif direction == Direction.DOWN:  nr += 1
-            elif direction == Direction.LEFT:  nc -= 1
-            elif direction == Direction.RIGHT: nc += 1
-            if self._dfs(nr, nc, end_pos, visited):
-                return True
-        # 不移除 visited
+            if direction == Direction.UP:
+                nr -= 1
+            elif direction == Direction.DOWN:
+                nr += 1
+            elif direction == Direction.LEFT:
+                nc -= 1
+            elif direction == Direction.RIGHT:
+                nc += 1
+
+            # 先检查下一个格子是否在地图内
+            if 0 <= nr < self.rows and 0 <= nc < self.cols:
+                next_cell = self.grid[nr][nc]
+                if next_cell is not None and next_cell.is_road():
+                    # 计算反方向（当前方向的反方向，下一个格子必须有这个方向）
+                    rev_dir = None
+                    if direction == Direction.UP:
+                        rev_dir = Direction.DOWN
+                    elif direction == Direction.DOWN:
+                        rev_dir = Direction.UP
+                    elif direction == Direction.LEFT:
+                        rev_dir = Direction.RIGHT
+                    elif direction == Direction.RIGHT:
+                        rev_dir = Direction.LEFT
+
+                    # 检查下一个格子是否有反方向（路是双向连通的）
+                    if rev_dir in next_cell.get_passable_directions():
+                        if self._dfs(nr, nc, end_pos, visited):
+                            return True
+
         return False
 
     def get_path(self) -> List[Tuple[int, int]]:
@@ -108,3 +132,19 @@ class MapModel:
                 return True
         path.pop()
         return False
+
+    def print_road_directions(self):
+        """打印每个格子的通行方向，方便调试"""
+        print("=== 道路通行方向调试 ===")
+        for r in range(self.rows):
+            row_str = []
+            for c in range(self.cols):
+                cell = self.grid[r][c]
+                if cell is None:
+                    row_str.append("None")
+                else:
+                    dirs = cell.get_passable_directions()
+                    dir_str = ",".join([d.name for d in dirs])
+                    row_str.append(f"{cell.get_type().name}({dir_str})")
+            print(f"Row {r}: {row_str}")
+        print("========================")

@@ -31,16 +31,8 @@ class RoadModel:
     """
 
     def __init__(self, road_type: RoadType, roated: int = 0) -> None:
-        """
-        Create a new RoadModel with type and
-        automatically set its other attributes according to the type.
-
-        Args:
-            road_type (RoadType): The type of the road.
-        """
         self.road_type = road_type
 
-        # Set the directions that the road can reach depending on the type of road.
         if road_type == RoadType.OBSTACLE_ROAD:
             self.__passable_direction = ()
         elif road_type == RoadType.STRAIGHT_ROAD:
@@ -51,11 +43,17 @@ class RoadModel:
             self.__passable_direction = (Direction.UP, Direction.RIGHT, Direction.LEFT)
         elif road_type == RoadType.CROSS_ROAD:
             self.__passable_direction = (Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT)
+        elif road_type == RoadType.START_ROAD:
+            # 起点默认是竖路，允许上下通行（车能往下走进入地图）
+            self.__passable_direction = (Direction.UP, Direction.DOWN)
+        elif road_type == RoadType.END_ROAD:
+            # 终点默认是竖路，允许上下通行（车能往上走进入终点）
+            self.__passable_direction = (Direction.UP, Direction.DOWN)
+        # -----------------------------------------------------------------
         else:
             self.__passable_direction = (Direction.UP,)
 
         self.__rotated = roated
-
         print(f"A {self.road_type} is created.")
 
     def get_passable_direction(self):

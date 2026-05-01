@@ -8,32 +8,40 @@ class RoadCellView:
         self.screen = screen
         self._road_view = None
         self._current_cell = None
+        self.font = pygame.font.Font(None, 20)
 
     def draw(self, cell_model):
-        # 清空旧 RoadView 如果 model 变了
+        # 先画背景
         if cell_model is None:
-            if self._road_view is not None:
-                self._road_view = None
             pygame.draw.rect(self.screen, (210, 210, 210), self.rect)
             pygame.draw.rect(self.screen, (170, 170, 170), self.rect, 1)
             self._current_cell = None
             return
 
+        # 更新 RoadView
         if self._road_view is None or self._current_cell != cell_model:
-            # 创建新的 RoadView，位置用 self.rect
             self._road_view = RoadView(cell_model, self.screen, self.rect)
             self._current_cell = cell_model
 
-        # 更新位置（如果 rect 发生变化）
         self._road_view.set_position(self.rect)
         self._road_view.draw()
 
-        # 锁定标记红框
+        # 起点 / 终点 / 障碍边框与标签
         from models.Road import RoadType
-        if cell_model.get_type() in (RoadType.START_ROAD, RoadType.END_ROAD, RoadType.OBSTACLE_ROAD):
-            pygame.draw.rect(self.screen, (255, 0, 0), self.rect, 3)
+        cell_type = cell_model.get_type()
+        if cell_type == RoadType.START_ROAD:
+            # 绿色边框
+            pygame.draw.rect(self.screen, (0, 180, 0), self.rect, 3)
+            label = self.font.render("S", True, (0, 100, 0))
+            self.screen.blit(label, (self.rect.x+5, self.rect.y+5))
+        elif cell_type == RoadType.END_ROAD:
+            pygame.draw.rect(self.screen, (180, 0, 0), self.rect, 3)
+            label = self.font.render("E", True, (180, 0, 0))
+            self.screen.blit(label, (self.rect.x+5, self.rect.y+5))
+        elif cell_type == RoadType.OBSTACLE_ROAD:
+            pygame.draw.rect(self.screen, (100, 100, 100), self.rect, 3)
+        # 普通道路不加边框
 
     def trigger_rotate_animation(self, duration=500):
-        """播放旋转动画（如果该格有路）"""
         if self._road_view is not None:
             self._road_view.rotated(duration)
