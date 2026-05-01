@@ -11,14 +11,12 @@ class RoadCellView:
         self.font = pygame.font.Font(None, 20)
 
     def draw(self, cell_model):
-        # 先画背景
         if cell_model is None:
             pygame.draw.rect(self.screen, (210, 210, 210), self.rect)
             pygame.draw.rect(self.screen, (170, 170, 170), self.rect, 1)
             self._current_cell = None
             return
 
-        # 更新 RoadView
         if self._road_view is None or self._current_cell != cell_model:
             self._road_view = RoadView(cell_model, self.screen, self.rect)
             self._current_cell = cell_model
@@ -26,11 +24,9 @@ class RoadCellView:
         self._road_view.set_position(self.rect)
         self._road_view.draw()
 
-        # 起点 / 终点 / 障碍边框与标签
         from models.Road import RoadType
         cell_type = cell_model.get_type()
         if cell_type == RoadType.START_ROAD:
-            # 绿色边框
             pygame.draw.rect(self.screen, (0, 180, 0), self.rect, 3)
             label = self.font.render("S", True, (0, 100, 0))
             self.screen.blit(label, (self.rect.x+5, self.rect.y+5))
@@ -40,7 +36,6 @@ class RoadCellView:
             self.screen.blit(label, (self.rect.x+5, self.rect.y+5))
         elif cell_type == RoadType.OBSTACLE_ROAD:
             pygame.draw.rect(self.screen, (100, 100, 100), self.rect, 3)
-        # 普通道路不加边框
 
     def trigger_rotate_animation(self, duration=500):
         if self._road_view is not None:

@@ -11,7 +11,6 @@ class MapView:
         self.cell_size = cell_size
         self.screen = screen
         self.cell_views: List[List[RoadCellView]] = []
-        # 创建一个二维数组的 RoadCellView
         for r in range(map_model.rows):
             row_views = []
             for c in range(map_model.cols):
@@ -26,7 +25,6 @@ class MapView:
                 self.cell_views[r][c].draw(cell)
 
     def check_click(self, mouse_pos: Tuple[int, int]) -> Optional[Tuple[int, int]]:
-        """返回被点击的格子(row, col)或 None"""
         for r in range(self.map_model.rows):
             for c in range(self.map_model.cols):
                 rect = pygame.Rect(self.x + c*self.cell_size, self.y + r*self.cell_size, self.cell_size, self.cell_size)

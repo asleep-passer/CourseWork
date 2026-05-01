@@ -8,7 +8,7 @@ from view.game_level_view import GameLevelView
 
 STATE_MAIN_MENU = 0
 STATE_LEVEL_SELECT = 1
-STATE_DIFFICULTY = 2    # 新增
+STATE_DIFFICULTY = 2
 STATE_GAME = 3
 
 def main():
@@ -30,7 +30,6 @@ def main():
     while running:
         clock.tick(60)
 
-        # 绘制当前状态
         if state == STATE_MAIN_MENU:
             main_menu_view.draw(screen)
         elif state == STATE_LEVEL_SELECT:

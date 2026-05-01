@@ -8,7 +8,7 @@ class InventoryView:
         self.x = x
         self.y = y
         self.screen = screen
-        self.buttons = []          # (rect, RoadType, count)
+        self.buttons = []
         self.selected_type = None
         self.font = pygame.font.Font(None, 18)
         self.display_types = [RoadType.STRAIGHT_ROAD, RoadType.BEND_ROAD,
@@ -24,7 +24,7 @@ class InventoryView:
             RoadType.T_SHAPED_ROAD: "roadTile9.png",
             RoadType.CROSS_ROAD: "roadTile5.png",
         }
-        size = 50   # 预览图稍小一点，避免挤压
+        size = 50
         for rt, fname in img_map.items():
             try:
                 img = pygame.image.load(os.path.join(base_path, "view/assets/Legacy/PNG", fname)).convert_alpha()
@@ -34,7 +34,6 @@ class InventoryView:
 
     def update_from_model(self, road_list):
         self.buttons.clear()
-        # 竖排：每个按钮高度 80，垂直间距 90 足够
         spacing = 90
         for i, rt in enumerate(self.display_types):
             rect = pygame.Rect(self.x, self.y + i * spacing, 80, 80)
@@ -47,13 +46,12 @@ class InventoryView:
             if count == 0:
                 color = (180, 180, 180)
             elif rt == self.selected_type:
-                color = (100, 200, 100)   # 选中高亮
+                color = (100, 200, 100)
             else:
                 color = (240, 240, 240)
             pygame.draw.rect(self.screen, color, rect)
             pygame.draw.rect(self.screen, (0, 0, 0), rect, 2)
 
-            # 预览图（居中）
             if rt in self.previews and self.previews[rt] is not None:
                 preview = self.previews[rt]
                 preview_rect = preview.get_rect(center=rect.center)
@@ -63,7 +61,6 @@ class InventoryView:
                 text_rect = text.get_rect(center=rect.center)
                 self.screen.blit(text, text_rect)
 
-            # 数量显示在右上角
             count_text = self.font.render(str(count), True, (255, 255, 255), (0, 0, 0))
             self.screen.blit(count_text, (rect.right - 25, rect.top + 2))
 

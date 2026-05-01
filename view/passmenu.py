@@ -20,8 +20,8 @@ class PassMenuView:
 
         self.bg_color = (240, 248, 255)
         self.border_color = (60, 120, 200)
-        self.star_color = (255, 215, 0)          # 金色实心
-        self.star_empty = (180, 180, 180)        # 灰色空心
+        self.star_color = (255, 215, 0)
+        self.star_empty = (180, 180, 180)
         self.text_color = (30, 30, 30)
 
         self.title_font = pg.font.Font(None, 40)
@@ -58,12 +58,10 @@ class PassMenuView:
         return 0
 
     def _draw_star(self, center_x, center_y, radius, filled=True):
-        """绘制一个五角星，filled=True为实心，否则为空心"""
         points = []
         inner_radius = radius * 0.4
-        # 五角星的10个顶点（外顶点5个+内顶点5个）
         for i in range(10):
-            angle = math.pi / 2 - i * math.pi / 5  # 从上往下开始
+            angle = math.pi / 2 - i * math.pi / 5
             if i % 2 == 0:
                 r = radius
             else:
@@ -74,7 +72,6 @@ class PassMenuView:
         color = self.star_color if filled else self.star_empty
         pg.draw.polygon(self.screen, color, points)
         if not filled:
-            # 空心：只绘制边框，2像素宽
             pg.draw.polygon(self.screen, self.star_empty, points, 2)
 
     def handle_event(self, event: pg.event.Event) -> Optional[str]:
@@ -94,22 +91,18 @@ class PassMenuView:
         if not self.visible:
             return
 
-        # 半透明遮罩
         overlay = pg.Surface(self.screen.get_size(), pg.SRCALPHA)
         overlay.fill((0, 0, 0, 128))
         self.screen.blit(overlay, (0, 0))
 
-        # 对话框背景
         dialog_rect = pg.Rect(self.dialog_x, self.dialog_y, self.dialog_w, self.dialog_h)
         pg.draw.rect(self.screen, self.bg_color, dialog_rect, border_radius=15)
         pg.draw.rect(self.screen, self.border_color, dialog_rect, 3, border_radius=15)
 
-        # 标题
         title_text = self.title_font.render(f"Level {self.level_id} Pass!", True, self.text_color)
         title_rect = title_text.get_rect(center=(self.dialog_x + self.dialog_w // 2, self.dialog_y + 45))
         self.screen.blit(title_text, title_rect)
 
-        # 星星（水平居中三颗星的总宽度）
         star_radius = 25
         star_spacing = 70
         total_width = 3 * star_spacing
@@ -120,16 +113,13 @@ class PassMenuView:
             filled = i < self.stars
             self._draw_star(start_x + i * star_spacing, star_y, star_radius, filled)
 
-        # 分数
         score_text = self.score_font.render(f"Score: {self.score}", True, self.text_color)
         score_rect = score_text.get_rect(center=(self.dialog_x + self.dialog_w // 2, self.dialog_y + 220))
         self.screen.blit(score_text, score_rect)
 
-        # 按钮
         self.next_btn.draw(self.screen)
         self.retry_btn.draw(self.screen)
 
-        # 提示文字
         tip_font = pg.font.Font(None, 20)
         tip_surf = tip_font.render("Click button to continue", True, (100, 100, 100))
         tip_rect = tip_surf.get_rect(center=(self.dialog_x + self.dialog_w // 2, self.dialog_y + self.dialog_h - 25))

@@ -33,22 +33,18 @@ class DialogView:
         if not self.visible:
             return
 
-        # 半透明遮罩
         overlay = pygame.Surface(screen.get_size(), pygame.SRCALPHA)
         overlay.fill(GRAY_OVERLAY)
         screen.blit(overlay, (0, 0))
 
-        # 对话框背景
         pygame.draw.rect(screen, WHITE, self.rect, border_radius=10)
         pygame.draw.rect(screen, BLACK, self.rect, 3, border_radius=10)
 
-        # 多行文本绘制
         lines = self.message.split('\n')
         line_height = FONT_MAIN.get_linesize()
         total_text_height = line_height * len(lines)
-        start_y = self.rect.top + 30  # 上方留边距
+        start_y = self.rect.top + 30
 
-        # 如果总高度超过对话框可用空间，可适当上移开始位置
         if total_text_height > self.rect.height - 60:
             start_y = self.rect.top + 10
 
@@ -57,7 +53,6 @@ class DialogView:
             text_rect = text_surf.get_rect(center=(self.rect.centerx, start_y + i * line_height))
             screen.blit(text_surf, text_rect)
 
-        # 绘制按钮
         for btn in self.buttons:
             btn.draw(screen)
 

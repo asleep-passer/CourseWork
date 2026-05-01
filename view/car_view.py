@@ -5,11 +5,6 @@ from typing import List, Tuple, Optional
 class CarView:
     def __init__(self, cell_size: int, map_offset: Tuple[int, int],
                  start_grid: Optional[Tuple[int, int]] = None):
-        """
-        cell_size: 格子像素大小
-        map_offset: 地图左上角在屏幕上的 (x, y)
-        start_grid: 起点的格子坐标 (row, col)，如果提供则初始显示在此
-        """
         self.cell_size = cell_size
         self.map_offset = map_offset
         self.path: List[Tuple[int, int]] = []
@@ -17,20 +12,18 @@ class CarView:
         self.position = (0.0, 0.0)
         self.speed = 2.0
         self.finished = False
-        self.moving = False          # 是否正在行驶
+        self.moving = False
         self.car_img = self._create_car_surface()
 
-        # 如果提供了起点，则初始显示在起点中心
         if start_grid:
             self.position = self._grid_to_screen(start_grid)
         else:
-            self.position = (0, 0)   # 占位
+            self.position = (0, 0)
 
     def _create_car_surface(self):
         surf = pygame.Surface((26, 16), pygame.SRCALPHA)
         surf.fill((255, 80, 80))
         pygame.draw.rect(surf, (0, 0, 0), surf.get_rect(), 2)
-        # 轮子
         for ox, oy in [(6,4), (20,4), (6,12), (20,12)]:
             pygame.draw.circle(surf, (0,0,0), (ox, oy), 3)
         return surf
@@ -42,7 +35,6 @@ class CarView:
         return x, y
 
     def start_move(self, path: List[Tuple[int, int]]):
-        """传入路径，开始移动"""
         if not path:
             return
         self.path = path
@@ -82,6 +74,5 @@ class CarView:
         screen.blit(rotated, rect)
 
     def move_one_step(self, next_grid: Tuple[int, int]):
-        """令小车移动到指定格子中心，无动画"""
         self.position = self._grid_to_screen(next_grid)
         self.current_index = self.path.index(next_grid) if next_grid in self.path else 0

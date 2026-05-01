@@ -5,7 +5,7 @@ from view.button_view import ButtonView
 from view.dialog_view import DialogView
 from view.inventory_view import InventoryView
 from view.car_view import CarView
-from view.passmenu import PassMenuView          # 保持你原来的导入
+from view.passmenu import PassMenuView
 from models.gamemodel import GameLevelModel
 from models.Road import RoadType
 from models.roadcell import RoadCellModel
@@ -76,35 +76,37 @@ class GameLevelView:
         if self.showing_win:
             return
 
-        # ---------- 打印地图方向 ----------
-        print("\n=== 地图通行方向 ===")
-        for r in range(self.model.map.rows):
-            for c in range(self.model.map.cols):
-                cell = self.model.map.get_cell(r, c)
-                if cell is None:
-                    print(f"({r},{c}): 空")
+        def try_autocomplete(self):
+            if self.showing_win:
+                return
+
+            print("\n=== Map Directions ===")
+            for r in range(self.model.map.rows):
+                for c in range(self.model.map.cols):
+                    cell = self.model.map.get_cell(r, c)
+                    if cell is None:
+                        print(f"({r},{c}): Empty")
+                    else:
+                        dirs = cell.get_passable_directions()
+                        print(f"({r},{c}) {cell.get_type().name}: {[d.name for d in dirs]}")
+            print("========================\n")
+
+            connected = self.model.map.is_path_connected()
+            path = self.model.map.get_path()
+            print(f"Connected: {connected}")
+            print(f"Path: {path}")
+
+            if connected:
+                self.model.check_completion()
+                self.showing_win = True
+                if path:
+                    print("✅ Car started, path length:", len(path))
+                    self.car_view.start_move(path)
+                    self._pass_menu_ready = False
                 else:
-                    dirs = cell.get_passable_directions()
-                    print(f"({r},{c}) {cell.get_type().name}: {[d.name for d in dirs]}")
-        print("========================\n")
-
-        # ---------- 检查连通性 ----------
-        connected = self.model.map.is_path_connected()
-        path = self.model.map.get_path()
-        print(f"连通性: {connected}")
-        print(f"路径: {path}")
-
-        if connected:
-            self.model.check_completion()
-            self.showing_win = True
-            if path:
-                print("✅ 启动小车，路径长度:", len(path))
-                self.car_view.start_move(path)
-                self._pass_menu_ready = False
+                    print("⚠️ Connected but path is empty! (Error)")
             else:
-                print("⚠️ 连通但路径为空！！（异常）")
-        else:
-            print("❌ 未连通，检查方向")
+                print("❌ Not connected, check road orientations")
 
     def handle_event(self, event: pg.event.Event) -> Optional[str]:
         if self.info_dialog.visible:
@@ -165,12 +167,10 @@ class GameLevelView:
                             self.show_info("No more roads of this type!")
                     return None
 
-            # ========== 修改：右键只触发动画，不额外 call rotate ==========
             if event.button == 3:
                 cell_pos = self.map_view.check_click(pos)
                 if cell_pos and not self.model.map.is_locked(cell_pos[0], cell_pos[1]):
                     r, c = cell_pos
-                    # 不再调用 cell.rotate()，动画内部会旋转
                     self.map_view.cell_views[r][c].trigger_rotate_animation(500)
                     self.model.start_timer()
                     self.try_autocomplete()
@@ -227,12 +227,10 @@ class GameLevelView:
 
         return None
 
-    # ========== 修改：只触发动画，不调用 cell.rotate() ==========
     def rotate_selected(self):
         if self.selected_cell is None: return
         r, c = self.selected_cell
         if self.model.map.is_locked(r, c): return
-        # 动画内部会调用 road.rotate()，这里不能再调
         self.map_view.cell_views[r][c].trigger_rotate_animation(500)
         self.model.start_timer()
 
