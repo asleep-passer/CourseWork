@@ -1,6 +1,8 @@
 from models import NormalRoadListModel as nl
 from models import AdminRoadListModel as al
 from models import Road as rd
+import pygame as pg
+import config as cg
 
 def test1():
     print("Test1:")
@@ -30,8 +32,8 @@ def test2():
 
 
 def main():
+    pg.init()
     test1()
-    test2()
 
 main()
     
