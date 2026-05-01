@@ -28,7 +28,7 @@ class RoadModel:
     """
     
 
-    def __init__(self,road_type:RoadType) -> None:
+    def __init__(self,road_type:RoadType,roated:int=0) -> None:
         """
         Create a new RoadModel with type and 
         automatically set its other attributes according to the type.
@@ -47,10 +47,12 @@ class RoadModel:
             self.__passable_direction=(Direction.UP,Direction.RIGHT)
         elif road_type==RoadType.T_SHAPED_ROAD:
             self.__passable_direction=(Direction.UP,Direction.RIGHT,Direction.LEFT)
-        else:
+        elif road_type==RoadType.CROSS_ROAD:
             self.__passable_direction=(Direction.UP,Direction.RIGHT,Direction.DOWN,Direction.LEFT)
+        else:
+            self.__passable_direction=(Direction.UP)
 
-        self.__rotated=0
+        self.__rotated=roated
 
         print(f"A {self.road_type} is created.")
 
