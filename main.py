@@ -1,6 +1,8 @@
 from models.Road import RoadModel, RoadType
 from models.map import MapModel
 from models.roadcell import RoadCellModel
+from models.dragstate import DragStateModel
+from models.gamemodel import GameLevelModel, Difficulty
 
 def create_4x4_grid() -> MapModel:
     """
