@@ -1,7 +1,6 @@
 from models import NormalRoadListModel as nl
 from models import AdminRoadListModel as al
 from models import Road as rd
-from view import RoadListView as rl
 import pygame as pg
 import config as cg
 from view.passmenu import PassMenuView
