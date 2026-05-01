@@ -18,7 +18,7 @@ def main():
     clock = pygame.time.Clock()
 
     state = STATE_MAIN_MENU
-    pending_level_id = 1   # 待进入的关卡号
+    pending_level_id = 1
 
     main_menu_view = MainMenuView(800, 650)
     level_select_view = LevelSelectView(800, 650)

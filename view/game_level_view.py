@@ -5,7 +5,7 @@ from view.button_view import ButtonView
 from view.dialog_view import DialogView
 from view.inventory_view import InventoryView
 from view.car_view import CarView
-from view.passmenu import PassMenuView
+from view.passmenu import PassMenuView          # 保持你原来的导入
 from models.gamemodel import GameLevelModel
 from models.Road import RoadType
 from models.roadcell import RoadCellModel
@@ -75,14 +75,36 @@ class GameLevelView:
     def try_autocomplete(self):
         if self.showing_win:
             return
-        if self.model.map.is_path_connected():
+
+        # ---------- 打印地图方向 ----------
+        print("\n=== 地图通行方向 ===")
+        for r in range(self.model.map.rows):
+            for c in range(self.model.map.cols):
+                cell = self.model.map.get_cell(r, c)
+                if cell is None:
+                    print(f"({r},{c}): 空")
+                else:
+                    dirs = cell.get_passable_directions()
+                    print(f"({r},{c}) {cell.get_type().name}: {[d.name for d in dirs]}")
+        print("========================\n")
+
+        # ---------- 检查连通性 ----------
+        connected = self.model.map.is_path_connected()
+        path = self.model.map.get_path()
+        print(f"连通性: {connected}")
+        print(f"路径: {path}")
+
+        if connected:
             self.model.check_completion()
             self.showing_win = True
-            path = self.model.get_path()
-            print("[SUCCESS] 连通！路径：", path)
             if path:
+                print("✅ 启动小车，路径长度:", len(path))
                 self.car_view.start_move(path)
                 self._pass_menu_ready = False
+            else:
+                print("⚠️ 连通但路径为空！！（异常）")
+        else:
+            print("❌ 未连通，检查方向")
 
     def handle_event(self, event: pg.event.Event) -> Optional[str]:
         if self.info_dialog.visible:
@@ -143,17 +165,16 @@ class GameLevelView:
                             self.show_info("No more roads of this type!")
                     return None
 
+            # ========== 修改：右键只触发动画，不额外 call rotate ==========
             if event.button == 3:
                 cell_pos = self.map_view.check_click(pos)
                 if cell_pos and not self.model.map.is_locked(cell_pos[0], cell_pos[1]):
                     r, c = cell_pos
-                    cell = self.model.map.get_cell(r, c)
-                    if cell is not None:
-                        self.map_view.cell_views[r][c].trigger_rotate_animation(500)
-                        cell.rotate()
-                        self.model.start_timer()
-                        self.try_autocomplete()
-                    return None
+                    # 不再调用 cell.rotate()，动画内部会旋转
+                    self.map_view.cell_views[r][c].trigger_rotate_animation(500)
+                    self.model.start_timer()
+                    self.try_autocomplete()
+                return None
 
         if event.type == pg.MOUSEMOTION and self.is_dragging:
             self.drag_mouse_pos = event.pos
@@ -206,15 +227,14 @@ class GameLevelView:
 
         return None
 
+    # ========== 修改：只触发动画，不调用 cell.rotate() ==========
     def rotate_selected(self):
         if self.selected_cell is None: return
         r, c = self.selected_cell
         if self.model.map.is_locked(r, c): return
-        cell = self.model.map.get_cell(r, c)
-        if cell is not None:
-            self.map_view.cell_views[r][c].trigger_rotate_animation(500)
-            cell.rotate()
-            self.model.start_timer()
+        # 动画内部会调用 road.rotate()，这里不能再调
+        self.map_view.cell_views[r][c].trigger_rotate_animation(500)
+        self.model.start_timer()
 
     def remove_selected(self):
         if self.selected_cell is None: return
@@ -252,9 +272,7 @@ class GameLevelView:
 
     def update(self):
         self.model.update_time()
-        # 更新小车（无论是否胜利）
         self.car_view.update()
-        # 小车到终点后弹出菜单
         if self.showing_win and self.car_view.finished and not self._pass_menu_ready:
             self.show_pass_menu()
             self._pass_menu_ready = True
@@ -292,7 +310,6 @@ class GameLevelView:
             temp.set_alpha(150)
             self.screen.blit(temp, preview_rect)
 
-        # 小车始终绘制
         self.car_view.draw(self.screen)
 
         if self.pass_menu is not None and self.pass_menu.visible:

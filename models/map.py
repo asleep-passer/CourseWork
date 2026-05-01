@@ -30,13 +30,32 @@ class MapModel:
         self.grid = [[None for _ in range(self.cols)] for _ in range(self.rows)]
         self.lock_mask = [[False for _ in range(self.cols)] for _ in range(self.rows)]
 
+    def _can_move(self, from_r, from_c, to_r, to_c, direction: Direction) -> bool:
+        if not (0 <= to_r < self.rows and 0 <= to_c < self.cols):
+            return False
+        a = self.grid[from_r][from_c]
+        b = self.grid[to_r][to_c]
+        if a is None or b is None:
+            return False
+        if not a.is_road() or not b.is_road():
+            return False
+        if direction not in a.get_passable_directions():
+            return False
+        opposite = {
+            Direction.UP: Direction.DOWN,
+            Direction.DOWN: Direction.UP,
+            Direction.LEFT: Direction.RIGHT,
+            Direction.RIGHT: Direction.LEFT
+        }
+        if opposite[direction] not in b.get_passable_directions():
+            return False
+        return True
+
     def is_path_connected(self) -> bool:
-        path = self.get_path()
-        return len(path) > 0
+        return len(self.get_path()) > 0
 
     def get_path(self) -> List[Tuple[int, int]]:
-        start = None
-        end = None
+        start, end = None, None
         for r in range(self.rows):
             for c in range(self.cols):
                 cell = self.grid[r][c]
@@ -45,7 +64,6 @@ class MapModel:
                         start = (r, c)
                     elif cell.get_type() == RoadType.END_ROAD:
                         end = (r, c)
-
         if not start or not end:
             return []
 
@@ -62,12 +80,20 @@ class MapModel:
             path.append((r, c))
             if (r, c) == end:
                 return True
-            for dr, dc in [(-1,0),(1,0),(0,-1),(0,1)]:
-                nr, nc = r+dr, c+dc
-                if 0 <= nr < self.rows and 0 <= nc < self.cols:
+
+            for d in cell.get_passable_directions():
+                nr, nc = r, c
+                if d == Direction.UP:      nr -= 1
+                elif d == Direction.DOWN:  nr += 1
+                elif d == Direction.LEFT:  nc -= 1
+                elif d == Direction.RIGHT: nc += 1
+
+                if self._can_move(r, c, nr, nc, d):
                     if dfs(nr, nc):
                         return True
+
             path.pop()
+            visited.remove((r, c))
             return False
 
         if dfs(start[0], start[1]):
