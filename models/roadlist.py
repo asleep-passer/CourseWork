@@ -46,6 +46,7 @@ class RoadListModel(ABC):
                 return rm(road_type)
         else:
             print("There is no more road can be used.")
+            return None
 
     def store_road(self,road:rm):
         """
