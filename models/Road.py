@@ -44,12 +44,9 @@ class RoadModel:
         elif road_type == RoadType.CROSS_ROAD:
             self.__passable_direction = (Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT)
         elif road_type == RoadType.START_ROAD:
-            # 起点默认是竖路，允许上下通行（车能往下走进入地图）
-            self.__passable_direction = (Direction.UP, Direction.DOWN)
+            self.__passable_direction = (Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT)
         elif road_type == RoadType.END_ROAD:
-            # 终点默认是竖路，允许上下通行（车能往上走进入终点）
-            self.__passable_direction = (Direction.UP, Direction.DOWN)
-        # -----------------------------------------------------------------
+            self.__passable_direction = (Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT)
         else:
             self.__passable_direction = (Direction.UP,)
 

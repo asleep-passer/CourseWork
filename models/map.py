@@ -30,6 +30,35 @@ class MapModel:
         self.grid = [[None for _ in range(self.cols)] for _ in range(self.rows)]
         self.lock_mask = [[False for _ in range(self.cols)] for _ in range(self.rows)]
 
+    # ----- 方向匹配辅助 -----
+    def _can_move(self, from_r, from_c, to_r, to_c, direction: Direction) -> bool:
+        """检查从 (from) 到 (to) 沿 direction 方向是否可通行"""
+        if not (0 <= to_r < self.rows and 0 <= to_c < self.cols):
+            return False
+        from_cell = self.grid[from_r][from_c]
+        to_cell = self.grid[to_r][to_c]
+        if from_cell is None or to_cell is None:
+            return False
+        if not from_cell.is_road() or not to_cell.is_road():
+            return False
+
+        # 当前格子该方向可通行
+        if direction not in from_cell.get_passable_directions():
+            return False
+
+        # 邻居格子必须具有相反方向的可通行性
+        opposite = {
+            Direction.UP: Direction.DOWN,
+            Direction.DOWN: Direction.UP,
+            Direction.LEFT: Direction.RIGHT,
+            Direction.RIGHT: Direction.LEFT
+        }
+        if opposite[direction] not in to_cell.get_passable_directions():
+            return False
+
+        return True
+
+    # ----- 连通性检测（DFS，只返回 bool）-----
     def is_path_connected(self) -> bool:
         start_pos = None
         end_pos = None
@@ -40,59 +69,32 @@ class MapModel:
                     start_pos = (row, col)
                 if cell and cell.get_type() == RoadType.END_ROAD:
                     end_pos = (row, col)
+
         if not start_pos or not end_pos:
             return False
-        visited = set()
-        return self._dfs(start_pos[0], start_pos[1], end_pos, visited)
 
-    def _dfs(self, row: int, col: int, end_pos: Tuple[int, int], visited: set) -> bool:
-        if row < 0 or row >= self.rows or col < 0 or col >= self.cols:
-            return False
-        if (row, col) in visited:
-            return False
-        current_cell = self.grid[row][col]
-        if not current_cell or not current_cell.is_road():
-            return False
+        visited = set()
+        return self._dfs_check(start_pos[0], start_pos[1], end_pos, visited)
+
+    def _dfs_check(self, row, col, end_pos, visited) -> bool:
         if (row, col) == end_pos:
             return True
         visited.add((row, col))
-
-        # 双向连通检查：必须下一个格子能反过来接当前方向
-        for direction in current_cell.get_passable_directions():
+        cell = self.grid[row][col]
+        for d in cell.get_passable_directions():
             nr, nc = row, col
-            if direction == Direction.UP:
-                nr -= 1
-            elif direction == Direction.DOWN:
-                nr += 1
-            elif direction == Direction.LEFT:
-                nc -= 1
-            elif direction == Direction.RIGHT:
-                nc += 1
+            if d == Direction.UP:    nr -= 1
+            elif d == Direction.DOWN:  nr += 1
+            elif d == Direction.LEFT:  nc -= 1
+            elif d == Direction.RIGHT: nc += 1
 
-            # 先检查下一个格子是否在地图内
-            if 0 <= nr < self.rows and 0 <= nc < self.cols:
-                next_cell = self.grid[nr][nc]
-                if next_cell is not None and next_cell.is_road():
-                    # 计算反方向（当前方向的反方向，下一个格子必须有这个方向）
-                    rev_dir = None
-                    if direction == Direction.UP:
-                        rev_dir = Direction.DOWN
-                    elif direction == Direction.DOWN:
-                        rev_dir = Direction.UP
-                    elif direction == Direction.LEFT:
-                        rev_dir = Direction.RIGHT
-                    elif direction == Direction.RIGHT:
-                        rev_dir = Direction.LEFT
-
-                    # 检查下一个格子是否有反方向（路是双向连通的）
-                    if rev_dir in next_cell.get_passable_directions():
-                        if self._dfs(nr, nc, end_pos, visited):
-                            return True
-
+            if (nr, nc) not in visited and self._can_move(row, col, nr, nc, d):
+                if self._dfs_check(nr, nc, end_pos, visited):
+                    return True
         return False
 
+    # ----- 获取路径（返回格子序列）-----
     def get_path(self) -> List[Tuple[int, int]]:
-        """返回从起点到终点的路径（格子坐标列表），用于小车动画"""
         start_pos = None
         end_pos = None
         for row in range(self.rows):
@@ -102,49 +104,31 @@ class MapModel:
                     start_pos = (row, col)
                 if cell and cell.get_type() == RoadType.END_ROAD:
                     end_pos = (row, col)
+
         if not start_pos or not end_pos:
             return []
+
         path = []
         visited = set()
-        if self._dfs_find_path(start_pos[0], start_pos[1], end_pos, visited, path):
+        if self._dfs_path(start_pos[0], start_pos[1], end_pos, visited, path):
             return path
         return []
 
-    def _dfs_find_path(self, row, col, end_pos, visited, path) -> bool:
-        if row < 0 or row >= self.rows or col < 0 or col >= self.cols:
-            return False
-        if (row, col) in visited:
-            return False
-        cell = self.grid[row][col]
-        if not cell or not cell.is_road():
-            return False
+    def _dfs_path(self, row, col, end_pos, visited, path) -> bool:
         path.append((row, col))
-        visited.add((row, col))
         if (row, col) == end_pos:
             return True
-        for direction in cell.get_passable_directions():
+        visited.add((row, col))
+        cell = self.grid[row][col]
+        for d in cell.get_passable_directions():
             nr, nc = row, col
-            if direction == Direction.UP:    nr -= 1
-            elif direction == Direction.DOWN:  nr += 1
-            elif direction == Direction.LEFT:  nc -= 1
-            elif direction == Direction.RIGHT: nc += 1
-            if self._dfs_find_path(nr, nc, end_pos, visited, path):
-                return True
+            if d == Direction.UP:    nr -= 1
+            elif d == Direction.DOWN:  nr += 1
+            elif d == Direction.LEFT:  nc -= 1
+            elif d == Direction.RIGHT: nc += 1
+
+            if (nr, nc) not in visited and self._can_move(row, col, nr, nc, d):
+                if self._dfs_path(nr, nc, end_pos, visited, path):
+                    return True
         path.pop()
         return False
-
-    def print_road_directions(self):
-        """打印每个格子的通行方向，方便调试"""
-        print("=== 道路通行方向调试 ===")
-        for r in range(self.rows):
-            row_str = []
-            for c in range(self.cols):
-                cell = self.grid[r][c]
-                if cell is None:
-                    row_str.append("None")
-                else:
-                    dirs = cell.get_passable_directions()
-                    dir_str = ",".join([d.name for d in dirs])
-                    row_str.append(f"{cell.get_type().name}({dir_str})")
-            print(f"Row {r}: {row_str}")
-        print("========================")
