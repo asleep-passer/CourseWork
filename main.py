@@ -91,9 +91,10 @@ def main():
                     action = game_view.handle_event(event)
                     if action == "back":
                         state = STATE_LEVEL_SELECT
+                        game_view=None
                     elif action == "next_level":
                         next_id = pending_level_id + 1
-                        if next_id <= 4:
+                        if next_id <= 12:
                             pending_level_id = next_id
                             game_model = GameLevelModel(level_id=next_id,
                                                         difficulty=game_model.difficulty)
@@ -110,6 +111,8 @@ def main():
                 else: 
                     action = game_view.handle_event(event)
                     if action == "back_to_menu":
+                        game_view=None
+                        level_select_view=LevelSelectView(800, 650)
                         state = STATE_MAIN_MENU
 
     pygame.quit()

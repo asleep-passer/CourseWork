@@ -72,8 +72,7 @@ class GameLevelModel:
         self.elapsed_time = 0
         self.active = False
 
-        if level_id in LEVEL_CONFIGS:
-            self.load_level(level_id)
+        self.load_level(level_id)
 
     def load_level(self, level_id: int):
         """
