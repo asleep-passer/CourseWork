@@ -4,17 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c3f1b254-67c0-409e-ad1a-253edcea8396" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/tests/testlevel.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/testmenu.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/view/button_view.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/view/dialog_view.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/view/difficulty_select_view.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/view/level_select_view.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/view/main_menu_view.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/view/mapview.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/testbutton.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/view/roadcellview.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/testdialog.py" afterDir="false" />
-    </list>
+    <list default="true" id="c3f1b254-67c0-409e-ad1a-253edcea8396" name="更改" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -42,6 +32,7 @@
   "keyToString": {
     "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Python.main.executor": "Run",
+    "Python.road.executor": "Run",
     "Python.testbutton.executor": "Run",
     "Python.testdialog.executor": "Run",
     "Python.testlevel.executor": "Run",
@@ -73,7 +64,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1777599074524</updated>
-      <workItem from="1777599075742" duration="9744000" />
+      <workItem from="1777599075742" duration="10430000" />
     </task>
     <servers />
   </component>
@@ -92,10 +83,11 @@
     </option>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/CourseWork$testmenu.coverage" NAME="testmenu 覆盖结果" MODIFIED="1777617557545" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
+    <SUITE FILE_PATH="coverage/CourseWork$road.coverage" NAME="road 覆盖结果" MODIFIED="1777618090819" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/view" />
+    <SUITE FILE_PATH="coverage/CourseWork$testmenu.coverage" NAME="testmenu 覆盖结果" MODIFIED="1777618466447" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/CourseWork$testlevel.coverage" NAME="testlevel 覆盖结果" MODIFIED="1777617152024" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/CourseWork$testbutton.coverage" NAME="testbutton 覆盖结果" MODIFIED="1777607538485" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/CourseWork$main.coverage" NAME="main 覆盖结果" MODIFIED="1777603630246" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/CourseWork$testdialog.coverage" NAME="testdialog 覆盖结果" MODIFIED="1777616962253" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
+    <SUITE FILE_PATH="coverage/CourseWork$testdialog.coverage" NAME="testdialog 覆盖结果" MODIFIED="1777617923385" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
   </component>
 </project>

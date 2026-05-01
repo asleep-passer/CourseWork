@@ -1,61 +1,75 @@
 import pygame
 import sys
 import os
-
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from view.main_menu_view import MainMenuView
 from view.level_select_view import LevelSelectView
 from view.difficulty_select_view import DifficultySelectView
 
+# Initialize Pygame
 pygame.init()
+
+# Initial window size
 W, H = 800, 600
-screen = pygame.display.set_mode((W, H))
+screen = pygame.display.set_mode((W, H), pygame.RESIZABLE)
+pygame.display.set_caption("Road Builder")
 clock = pygame.time.Clock()
 
 main_menu = MainMenuView(W, H)
 level_select = LevelSelectView(W, H)
 diff_select = DifficultySelectView(W, H)
 
-state = "menu"
+# UI state management
+current_state = "menu"
 
+# Main loop
 running = True
 while running:
     screen.fill((235, 245, 255))
 
-    if state == "menu":
+    # Render current screen
+    if current_state == "menu":
         main_menu.draw(screen)
-    elif state == "level":
+    elif current_state == "level":
         level_select.draw(screen)
-    elif state == "difficulty":
+    elif current_state == "difficulty":
         diff_select.draw(screen)
 
+    # Event processing
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+
+        # Handle window resizing (maximize)
+        if event.type == pygame.VIDEORESIZE:
+            W, H = event.w, event.h
+            screen = pygame.display.set_mode((W, H), pygame.RESIZABLE)
+
+        # Handle mouse clicks
         if event.type == pygame.MOUSEBUTTONDOWN:
             pos = event.pos
 
-            if state == "menu":
+            if current_state == "menu":
                 res = main_menu.handle_click(pos)
                 if res == "Start Game":
-                    state = "level"
+                    current_state = "level"
                 if res == "Quit":
                     running = False
 
-            elif state == "level":
+            elif current_state == "level":
                 res = level_select.handle_click(pos)
                 if res == "Back":
-                    state = "menu"
+                    current_state = "menu"
                 if res and res.startswith("Level"):
-                    state = "difficulty"
+                    current_state = "difficulty"
 
-            elif state == "difficulty":
+            elif current_state == "difficulty":
                 res = diff_select.handle_click(pos)
                 if res == "Back":
-                    state = "level"
+                    current_state = "level"
                 if res in ["Easy", "Medium", "Hard"]:
-                    print(f"进入游戏：关卡+难度 → {res}")
+                    print(f"Selected Difficulty: {res}")
 
     pygame.display.flip()
     clock.tick(60)
