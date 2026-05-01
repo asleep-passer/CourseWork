@@ -12,6 +12,7 @@ from models.roadcell import RoadCellModel
 
 class GameLevelView:
     def __init__(self, screen: pg.Surface, level_model: GameLevelModel):
+        self.hint_color = (0, 255, 0)
         self.screen = screen
         self.model = level_model
         self.font = pg.font.Font(None, 24)
@@ -30,6 +31,7 @@ class GameLevelView:
         self.rotate_btn = ButtonView(240, 20, 90, 40, "Rotate")
         self.remove_btn = ButtonView(350, 20, 90, 40, "Remove")
         self.clear_btn = ButtonView(460, 20, 110, 40, "Clear Sel")
+        self.hint_btn = ButtonView(580, 20, 90, 40, "Hint")
 
         self.selected_cell: Optional[Tuple[int, int]] = None
         self.selected_road_type: Optional[RoadType] = None
@@ -49,7 +51,10 @@ class GameLevelView:
         self.car_view = None
         self.showing_win = False
 
-        # 小车初始化：放在起点
+
+        self.hint_cells = []
+        self.hint_timer = 0
+
         start_cell = None
         for r in range(self.model.map.rows):
             for c in range(self.model.map.cols):
@@ -73,40 +78,55 @@ class GameLevelView:
         self._pass_menu_ready = True
 
     def try_autocomplete(self):
+
         if self.showing_win:
             return
 
-        def try_autocomplete(self):
-            if self.showing_win:
-                return
-
-            print("\n=== Map Directions ===")
-            for r in range(self.model.map.rows):
-                for c in range(self.model.map.cols):
-                    cell = self.model.map.get_cell(r, c)
-                    if cell is None:
-                        print(f"({r},{c}): Empty")
-                    else:
-                        dirs = cell.get_passable_directions()
-                        print(f"({r},{c}) {cell.get_type().name}: {[d.name for d in dirs]}")
-            print("========================\n")
-
-            connected = self.model.map.is_path_connected()
-            path = self.model.map.get_path()
-            print(f"Connected: {connected}")
-            print(f"Path: {path}")
-
-            if connected:
-                self.model.check_completion()
-                self.showing_win = True
-                if path:
-                    print("✅ Car started, path length:", len(path))
-                    self.car_view.start_move(path)
-                    self._pass_menu_ready = False
+        print("\n=== Map Directions ===")
+        for r in range(self.model.map.rows):
+            for c in range(self.model.map.cols):
+                cell = self.model.map.get_cell(r, c)
+                if cell is None:
+                    print(f"({r},{c}): Empty")
                 else:
-                    print("⚠️ Connected but path is empty! (Error)")
+                    dirs = cell.get_passable_directions()
+                    print(f"({r},{c}) {cell.get_type().name}: {[d.name for d in dirs]}")
+        print("========================\n")
+
+        connected = self.model.map.is_path_connected()
+        path = self.model.map.get_path()
+        print(f"Connected: {connected}")
+        print(f"Path: {path}")
+
+        if connected:
+            self.model.check_completion()
+            self.showing_win = True
+            if path:
+                print("✅ Car started, path length:", len(path))
+                self.car_view.start_move(path)
+                self._pass_menu_ready = False
             else:
-                print("❌ Not connected, check road orientations")
+                print("⚠️ Connected but path is empty! (Error)")
+        else:
+            print("❌ Not connected, check road orientations")
+
+    def request_hint(self):
+
+        path = self.model.map.get_path()
+        if path:
+            self.hint_cells = path
+            self.hint_timer = 180
+            self.hint_color = (0, 255, 0)
+        else:
+
+            physical = self.model.map.get_physical_path()
+            if physical:
+                self.hint_cells = physical
+                self.hint_timer = 180
+                self.hint_color = (255, 165, 0)
+                self.show_info("Suggested path\n(check road orientations)")
+            else:
+                self.show_info("No possible path found.\nAdd more roads.")
 
     def handle_event(self, event: pg.event.Event) -> Optional[str]:
         if self.info_dialog.visible:
@@ -224,7 +244,9 @@ class GameLevelView:
                 self.inventory.selected_type = None
                 self.selected_cell = None
                 return None
-
+            if self.hint_btn.rect.collidepoint(pos):
+                self.request_hint()
+                return None
         return None
 
     def rotate_selected(self):
@@ -255,6 +277,8 @@ class GameLevelView:
         self.showing_win = False
         self.pass_menu = None
         self._pass_menu_ready = False
+        self.hint_cells = []
+        self.hint_timer = 0
 
         start_cell = None
         for r in range(self.model.map.rows):
@@ -271,6 +295,12 @@ class GameLevelView:
     def update(self):
         self.model.update_time()
         self.car_view.update()
+
+        if self.hint_timer > 0:
+            self.hint_timer -= 1
+            if self.hint_timer == 0:
+                self.hint_cells = []
+
         if self.showing_win and self.car_view.finished and not self._pass_menu_ready:
             self.show_pass_menu()
             self._pass_menu_ready = True
@@ -291,9 +321,15 @@ class GameLevelView:
         self.rotate_btn.draw(self.screen)
         self.remove_btn.draw(self.screen)
         self.clear_btn.draw(self.screen)
+        self.hint_btn.draw(self.screen)
 
         self.map_view.draw()
         self.inventory.draw()
+
+        if self.hint_cells:
+            for (r, c) in self.hint_cells:
+                rect = pg.Rect(self.map_view.x + c * 120, self.map_view.y + r * 120, 120, 120)
+                pg.draw.rect(self.screen, self.hint_color, rect, 4)
 
         if self.selected_cell is not None:
             r, c = self.selected_cell

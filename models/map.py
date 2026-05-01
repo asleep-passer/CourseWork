@@ -99,3 +99,42 @@ class MapModel:
         if dfs(start[0], start[1]):
             return path
         return []
+
+    def get_physical_path(self) -> List[Tuple[int, int]]:
+        start = None
+        end = None
+        for r in range(self.rows):
+            for c in range(self.cols):
+                cell = self.grid[r][c]
+                if cell:
+                    if cell.get_type() == RoadType.START_ROAD:
+                        start = (r, c)
+                    elif cell.get_type() == RoadType.END_ROAD:
+                        end = (r, c)
+        if not start or not end:
+            return []
+
+        visited = set()
+        path = []
+
+        def dfs(r, c):
+            if (r, c) in visited:
+                return False
+            cell = self.grid[r][c]
+            if cell is None or cell.get_type() == RoadType.OBSTACLE_ROAD:
+                return False
+            visited.add((r, c))
+            path.append((r, c))
+            if (r, c) == end:
+                return True
+            for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+                nr, nc = r + dr, c + dc
+                if 0 <= nr < self.rows and 0 <= nc < self.cols:
+                    if dfs(nr, nc):
+                        return True
+            path.pop()
+            return False
+
+        if dfs(start[0], start[1]):
+            return path
+        return []

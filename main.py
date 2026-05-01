@@ -29,7 +29,6 @@ def main():
     running = True
     while running:
         clock.tick(60)
-
         if state == STATE_MAIN_MENU:
             main_menu_view.draw(screen)
         elif state == STATE_LEVEL_SELECT:
