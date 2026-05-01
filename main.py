@@ -1,7 +1,7 @@
 import pygame
 import models
 import config
-from models.road import RoadModel, RoadType
+from models.Road import RoadModel, RoadType
 from models.map import MapModel
 from models.roadcell import RoadCellModel
 

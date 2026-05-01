@@ -1,13 +1,13 @@
 from abc import ABC
-from .road import RoadType as rt
-from .road import RoadModel as rm
+from .Road import RoadType as rt
+from .Road import RoadModel as rm
 
 class RoadListModel(ABC):
     """
-    An abstract list of roads, 
-    providing three methods: 
-    retrieving roads, 
-    storing roads, 
+    An abstract list of roads,
+    providing three methods:
+    retrieving roads,
+    storing roads,
     and viewing the number of roads.
 
     Attributes:
@@ -46,13 +46,13 @@ class RoadListModel(ABC):
                 return rm(road_type)
         else:
             print("There is no more road can be used.")
-        
+
     def store_road(self,road:rm):
         """
         Store the road instance.
 
         Args:
-            road (RoadModel): The road to be stored. 
+            road (RoadModel): The road to be stored.
         """
         for exist_road in self._road_list[road.road_type]:
             if exist_road is road:
@@ -74,13 +74,13 @@ class RoadListModel(ABC):
             return "inf"
         return self._road_num[road_type]
 
-    
+
 
 class NormalRoadListModel(RoadListModel):
-    def __init__(self, 
-                 num_str_road:int, 
-                 num_bend_road:int, 
-                 num_t_road:int, 
+    def __init__(self,
+                 num_str_road:int,
+                 num_bend_road:int,
+                 num_t_road:int,
                  num_cross_road:int) -> None:
         """
         Formatting Attributes.
@@ -97,18 +97,18 @@ class NormalRoadListModel(RoadListModel):
                         rt.BEND_ROAD:num_bend_road,
                         rt.T_SHAPED_ROAD:num_t_road,
                         rt.CROSS_ROAD:num_cross_road}
-        
+
         self._road_list={rt.STRAIGHT_ROAD:[],
                         rt.BEND_ROAD:[],
                         rt.T_SHAPED_ROAD:[],
                         rt.CROSS_ROAD:[]}
-        
+
         for type,num in self._road_num.items():
             if num > 0:
                 for i in range(num):
                     self._road_list[type].append(rm(type))
-    
-    
+
+
 
 
 class AdminRoadListModel(RoadListModel):
@@ -125,7 +125,7 @@ class AdminRoadListModel(RoadListModel):
                         rt.CROSS_ROAD:-1,
                         rt.START_ROAD:-1,
                         rt.END_ROAD:-1}
-        
+
         self._road_list={rt.OBSTACLE_ROAD:[],
                         rt.STRAIGHT_ROAD:[],
                         rt.BEND_ROAD:[],

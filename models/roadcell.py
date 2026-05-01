@@ -1,4 +1,5 @@
-from .road import RoadModel, RoadType
+from .Road import RoadModel, RoadType
+from typing import Tuple
 
 class RoadCellModel:
     def __init__(self, row: int, col: int, road_type: RoadType = RoadType.OBSTACLE_ROAD) -> None:

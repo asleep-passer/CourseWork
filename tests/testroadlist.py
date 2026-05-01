@@ -1,6 +1,6 @@
 from models import NormalRoadListModel as nl
 from models import AdminRoadListModel as al
-from models import road as rd
+from models import Road as rd
 
 def test1():
     print("Test1:")

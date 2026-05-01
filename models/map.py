@@ -1,6 +1,6 @@
 from typing import List
 from .roadcell import RoadCellModel
-from .road import RoadType
+from .Road import RoadType
 
 class MapModel:
     def __init__(self, rows: int = 4, cols: int = 4) -> None:
