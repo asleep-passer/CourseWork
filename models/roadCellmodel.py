@@ -212,13 +212,24 @@ class RoadCellModel:
 # Example usage (optional, for testing)
 # ----------------------------------------------------------------------
 if __name__ == "__main__":
-    # Create a 2x2 grid
+    # Create a 4x4 grid
     grid = [
-        [RoadCellModel(0, 0, RoadType.START_ROAD), RoadCellModel(0, 1, RoadType.STRAIGHT_ROAD)],
-        [RoadCellModel(1, 0, RoadType.OBSTACLE_ROAD), RoadCellModel(1, 1, RoadType.END_ROAD)]
+        [RoadCellModel(0, 0, RoadType.START_ROAD), RoadCellModel(0, 1, RoadType.STRAIGHT_ROAD), RoadCellModel(0, 2, RoadType.STRAIGHT_ROAD), RoadCellModel(0, 3, RoadType.END_ROAD)],
+        [RoadCellModel(1, 0, RoadType.OBSTACLE_ROAD), RoadCellModel(1, 1, RoadType.BEND_ROAD), RoadCellModel(1, 2, RoadType.STRAIGHT_ROAD), RoadCellModel(1, 3, RoadType.OBSTACLE_ROAD)],
+        [RoadCellModel(2, 0, RoadType.OBSTACLE_ROAD), RoadCellModel(2, 1, RoadType.T_SHAPED_ROAD), RoadCellModel(2, 2, RoadType.CROSS_ROAD), RoadCellModel(2, 3, RoadType.BEND_ROAD)],
+        [RoadCellModel(3, 0, RoadType.OBSTACLE_ROAD), RoadCellModel(3, 1, RoadType.STRAIGHT_ROAD), RoadCellModel(3, 2, RoadType.STRAIGHT_ROAD), RoadCellModel(3, 3, RoadType.OBSTACLE_ROAD)]
     ]
 
-    # Rotate the first cell and check connections
-    grid[0][0].rotate()
-    print(grid[0][0].get_passable_directions())
-    print("Connected neighbors of (0,0):", grid[0][0].get_connected_neighbors(grid))
+    # Rotate the start cell (0,0) and check its passable directions
+    grid[0][0].rotate()  # START_ROAD rotates from all-four-directions to same (still all directions)
+    print("Passable directions of (0,0):", grid[0][0].get_passable_directions())
+
+    # Rotate a bend road at (1,1) and check its neighbors
+    grid[1][1].rotate()   # default BEND_ROAD (UP,RIGHT) becomes (RIGHT,DOWN) after 1 rotation
+    print("Passable directions of (1,1):", grid[1][1].get_passable_directions())
+    print("Connected neighbors of (1,1):", grid[1][1].get_connected_neighbors(grid))
+
+    # Print the entire grid's road types for visualization
+    print("\nGrid layout (road types):")
+    for row in grid:
+        print([cell.get_type().name for cell in row])
