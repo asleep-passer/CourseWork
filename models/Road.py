@@ -19,60 +19,30 @@ class RoadType(Enum):
 
 
 class RoadModel:
-    """
-    Define the road, 
-    provide road type information, rotation information, 
-    destination information, and reset function.
-
-    Attributes:
-        road_type (RoadType):                         The type of road.
-        __passable_direction (Tuple[Direction, ...]): The directions that the road can reach.
-        __roated (int):                               The number of times the road has been rotated.
-    """
-
-    def __init__(self, road_type: RoadType, roated: int = 0) -> None:
+    def __init__(self, road_type: RoadType, rotated: int = 0):
         self.road_type = road_type
+        self._rotated = rotated
 
-        if road_type == RoadType.OBSTACLE_ROAD:
-            self.__passable_direction = ()
-        elif road_type == RoadType.STRAIGHT_ROAD:
-            self.__passable_direction = (Direction.UP, Direction.DOWN)
-        elif road_type == RoadType.BEND_ROAD:
-            self.__passable_direction = (Direction.UP, Direction.RIGHT)
-        elif road_type == RoadType.T_SHAPED_ROAD:
-            self.__passable_direction = (Direction.UP, Direction.RIGHT, Direction.LEFT)
-        elif road_type == RoadType.CROSS_ROAD:
-            self.__passable_direction = (Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT)
-        elif road_type == RoadType.START_ROAD:
-            self.__passable_direction = (Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT)
-        elif road_type == RoadType.END_ROAD:
-            self.__passable_direction = (Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT)
-        else:
-            self.__passable_direction = (Direction.UP,)
+        base = {
+            RoadType.OBSTACLE_ROAD: (),
+            RoadType.STRAIGHT_ROAD: (Direction.UP, Direction.DOWN),
+            RoadType.BEND_ROAD: (Direction.UP, Direction.RIGHT),
+            RoadType.T_SHAPED_ROAD: (Direction.UP, Direction.RIGHT, Direction.LEFT),
+            RoadType.CROSS_ROAD: (Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT),
+            RoadType.START_ROAD: (Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT),
+            RoadType.END_ROAD: (Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT),
+        }
 
-        self.__rotated = roated
-        print(f"A {self.road_type} is created.")
+        self._passable = base.get(road_type, (Direction.UP,))
 
     def get_passable_direction(self):
-        """
-        Return current directions that the road can reach.
-
-        Returns:
-            Tuple[Direction, ...]: Current directions that the road can reach.
-        """
-
-        cur_passable_direction = []
-
-        for dir in self.__passable_direction:
-            cur_passable_direction.append(Direction((dir.value + self.__rotated) % 4))
-
-        return tuple(cur_passable_direction)
+        return tuple(
+            Direction((d.value + self._rotated) % 4)
+            for d in self._passable
+        )
 
     def rotate(self):
-        self.__rotated = (self.__rotated + 1) % 4
+        self._rotated = (self._rotated + 1) % 4
 
     def reset(self):
-        """
-        Reset the attributes of the road.
-        """
-        self.__rotated = 0
+        self._rotated = 0

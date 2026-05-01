@@ -80,3 +80,8 @@ class CarView:
         rotated = pygame.transform.rotate(self.car_img, angle)
         rect = rotated.get_rect(center=self.position)
         screen.blit(rotated, rect)
+
+    def move_one_step(self, next_grid: Tuple[int, int]):
+        """令小车移动到指定格子中心，无动画"""
+        self.position = self._grid_to_screen(next_grid)
+        self.current_index = self.path.index(next_grid) if next_grid in self.path else 0
