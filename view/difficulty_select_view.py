@@ -1,0 +1,32 @@
+import pygame
+from typing import Optional, Tuple
+from view.button_view import ButtonView
+
+pygame.font.init()
+FONT_TITLE = pygame.font.Font(None, 40)
+BG = (235, 245, 255)
+
+class DifficultySelectView:
+    """Easy Medium Hard"""
+    def __init__(self, w, h):
+        self.w = w
+        self.h = h
+        self.buttons = []
+        cx = w // 2 - 90
+        self.buttons.append(ButtonView(cx, 180, 180, 50, "Easy"))
+        self.buttons.append(ButtonView(cx, 250, 180, 50, "Medium"))
+        self.buttons.append(ButtonView(cx, 320, 180, 50, "Hard"))
+        self.buttons.append(ButtonView(w//2 - 60, 400, 120, 50, "Back"))
+
+    def draw(self, screen):
+        screen.fill(BG)
+        title = FONT_TITLE.render("Select Difficulty", True, (20,40,80))
+        screen.blit(title, title.get_rect(center=(self.w//2, 100)))
+        for btn in self.buttons:
+            btn.draw(screen)
+
+    def handle_click(self, mouse_pos: Tuple[int, int]) -> Optional[str]:
+        for btn in self.buttons:
+            if btn.rect.collidepoint(mouse_pos):
+                return btn.text
+        return None
