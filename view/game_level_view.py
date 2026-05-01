@@ -314,7 +314,7 @@ class GameLevelView:
         self.screen.blit(self.font.render(time_str, True, (0,0,0)), (200, 70))
 
         sel_str = "Selected: " + (self.selected_road_type.name.replace("_ROAD","") if self.selected_road_type else "None")
-        self.screen.blit(self.small_font.render(sel_str, True, (0,0,0)), (560, 70))
+        self.screen.blit(self.font.render(sel_str, True, (0,0,0)), (560, 70))
 
         self.back_btn.draw(self.screen)
         self.reset_btn.draw(self.screen)
