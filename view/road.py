@@ -23,7 +23,6 @@ class RoadView:
         self.__rotation_start_time = 0
         self.__rotation_center = pos.center
 
-        base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
         # 加载原图
         base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -44,7 +43,6 @@ class RoadView:
         else:
             img = pg.image.load(os.path.join(base_path, "view/assets/Legacy/PNG/roadTile18.png"))
 
-        img = img.convert_alpha()
         # 转换格式，保证 smoothscale 可用
         img = img.convert_alpha()
 

@@ -1,68 +1,81 @@
 import pygame
-from typing import List, Tuple
+import math
+from typing import List, Tuple, Optional
 
 class CarView:
-    def __init__(self, path: List[Tuple[int, int]], cell_size: int, map_offset: Tuple[int, int]):
+    def __init__(self, cell_size: int, map_offset: Tuple[int, int],
+                 start_grid: Optional[Tuple[int, int]] = None):
         """
-        path: 格子坐标序列 (row, col)
-        cell_size: 每个格子的像素大小
+        cell_size: 格子像素大小
         map_offset: 地图左上角在屏幕上的 (x, y)
+        start_grid: 起点的格子坐标 (row, col)，如果提供则初始显示在此
         """
-        self.path = path
         self.cell_size = cell_size
         self.map_offset = map_offset
+        self.path: List[Tuple[int, int]] = []
         self.current_index = 0
-        self.position = self._grid_to_screen(path[0])
-        self.speed = 2.0          # 每帧移动像素
+        self.position = (0.0, 0.0)
+        self.speed = 2.0
         self.finished = False
+        self.moving = False          # 是否正在行驶
         self.car_img = self._create_car_surface()
 
+        # 如果提供了起点，则初始显示在起点中心
+        if start_grid:
+            self.position = self._grid_to_screen(start_grid)
+        else:
+            self.position = (0, 0)   # 占位
+
     def _create_car_surface(self):
-        """创建一个简单的小车表面"""
-        surf = pygame.Surface((30, 20), pygame.SRCALPHA)
-        surf.fill((255, 100, 100))   # 红色小车
-        pygame.draw.rect(surf, (0,0,0), surf.get_rect(), 2)
-        # 加上轮子（四个小圆）
-        pygame.draw.circle(surf, (0,0,0), (8, 5), 4)
-        pygame.draw.circle(surf, (0,0,0), (22, 5), 4)
-        pygame.draw.circle(surf, (0,0,0), (8, 15), 4)
-        pygame.draw.circle(surf, (0,0,0), (22, 15), 4)
+        surf = pygame.Surface((26, 16), pygame.SRCALPHA)
+        surf.fill((255, 80, 80))
+        pygame.draw.rect(surf, (0, 0, 0), surf.get_rect(), 2)
+        # 轮子
+        for ox, oy in [(6,4), (20,4), (6,12), (20,12)]:
+            pygame.draw.circle(surf, (0,0,0), (ox, oy), 3)
         return surf
 
     def _grid_to_screen(self, rc: Tuple[int, int]) -> Tuple[float, float]:
         row, col = rc
-        x = self.map_offset[0] + col * self.cell_size + self.cell_size/2
-        y = self.map_offset[1] + row * self.cell_size + self.cell_size/2
+        x = self.map_offset[0] + col * self.cell_size + self.cell_size / 2
+        y = self.map_offset[1] + row * self.cell_size + self.cell_size / 2
         return x, y
 
-    def update(self):
-        if self.finished or self.current_index >= len(self.path) - 1:
-            self.finished = True
+    def start_move(self, path: List[Tuple[int, int]]):
+        """传入路径，开始移动"""
+        if not path:
             return
-        # 当前目标点（下一个格子中心）
+        self.path = path
+        self.current_index = 0
+        self.position = self._grid_to_screen(path[0])
+        self.moving = True
+        self.finished = False
+
+    def update(self):
+        if not self.moving or self.finished:
+            return
+        if self.current_index >= len(self.path) - 1:
+            self.finished = True
+            self.moving = False
+            return
         target = self._grid_to_screen(self.path[self.current_index + 1])
         dx = target[0] - self.position[0]
         dy = target[1] - self.position[1]
-        dist = (dx**2 + dy**2) ** 0.5
+        dist = math.hypot(dx, dy)
         if dist < self.speed:
             self.position = target
             self.current_index += 1
-            if self.current_index >= len(self.path) - 1:
-                self.finished = True
         else:
             self.position = (self.position[0] + self.speed * dx / dist,
                              self.position[1] + self.speed * dy / dist)
 
     def draw(self, screen: pygame.Surface):
-        """绘制小车（根据移动方向旋转）"""
         angle = 0
-        if not self.finished and self.current_index < len(self.path) - 1:
-            # 简单计算朝向
+        if self.moving and self.current_index < len(self.path) - 1:
             next_pos = self._grid_to_screen(self.path[self.current_index + 1])
             dx = next_pos[0] - self.position[0]
             dy = next_pos[1] - self.position[1]
             if dx != 0 or dy != 0:
-                import math
                 angle = -math.degrees(math.atan2(dy, dx))
         rotated = pygame.transform.rotate(self.car_img, angle)
         rect = rotated.get_rect(center=self.position)

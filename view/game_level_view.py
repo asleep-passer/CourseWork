@@ -5,9 +5,11 @@ from view.button_view import ButtonView
 from view.dialog_view import DialogView
 from view.inventory_view import InventoryView
 from view.car_view import CarView
+from view.passmenu import PassMenuView
 from models.gamemodel import GameLevelModel
 from models.Road import RoadType
 from models.roadcell import RoadCellModel
+
 
 class GameLevelView:
     def __init__(self, screen: pg.Surface, level_model: GameLevelModel):
@@ -24,12 +26,12 @@ class GameLevelView:
         self.inventory = InventoryView(map_x + 4*120 + 40, map_y + 10, screen)
         self.inventory.update_from_model(level_model.player_road_list)
 
+        # 按钮
         self.back_btn = ButtonView(20, 20, 90, 40, "Back")
         self.reset_btn = ButtonView(130, 20, 90, 40, "Reset")
         self.rotate_btn = ButtonView(240, 20, 90, 40, "Rotate")
         self.remove_btn = ButtonView(350, 20, 90, 40, "Remove")
         self.clear_btn = ButtonView(460, 20, 110, 40, "Clear Sel")
-        self.submit_btn = ButtonView(580, 20, 90, 40, "Submit")
 
         self.selected_cell: Optional[Tuple[int, int]] = None
         self.selected_road_type: Optional[RoadType] = None
@@ -38,40 +40,55 @@ class GameLevelView:
         self.drag_preview_road = None
         self.drag_mouse_pos = (0, 0)
 
-        # 提示对话框
+        # 提示对话框（保留，用于错误提示）
         self.info_dialog = DialogView(250, 200, 350, 150)
         self.info_dialog.add_button(
             ButtonView(400, 290, 80, 35, "OK", callback=self.info_dialog.hide)
         )
 
-        # 胜利对话框（先配置好，但不显示）
-        self.win_dialog = DialogView(230, 180, 340, 240)
-        self.win_dialog.visible = False
-        self.win_dialog.message = ""
-        self.win_dialog.buttons = []
-        self._win_dialog_ready = False   # 标记是否已经配置好但等待显示
+        # ★ 用 PassMenuView 替代原来的 win_dialog
+        self.pass_menu = None
+        self._pass_menu_ready = False
 
         self.car_view = None
         self.showing_win = False
+
+        # 查找起点坐标，创建小车（静止在起点）
+        start_cell = None
+        for r in range(self.model.map.rows):
+            for c in range(self.model.map.cols):
+                cell = self.model.map.get_cell(r, c)
+                if cell and cell.get_type() == RoadType.START_ROAD:
+                    start_cell = (r, c)
+                    break
+            if start_cell:
+                break
+        self.car_view = CarView(120, (self.map_view.x, self.map_view.y),
+                                start_grid=start_cell)
 
     # ================= 提示 =================
     def show_info(self, msg: str):
         self.info_dialog.set_message(msg)
         self.info_dialog.show()
 
-    def setup_win_dialog(self):
-        """配置胜利对话框的消息和按钮，但不显示"""
+    def show_pass_menu(self):
+        """弹出通关菜单"""
         score = self.model.score
-        level = self.model.level_id
-        msg = f"Congratulations!\nLevel {level} Complete\nYour Score: {score}"
-        self.win_dialog.set_message(msg)
-        self.win_dialog.buttons.clear()
-        btn_y = self.win_dialog.rect.bottom - 60
-        next_btn = ButtonView(self.win_dialog.rect.centerx - 110, btn_y, 100, 40, "Next")
-        back_btn = ButtonView(self.win_dialog.rect.centerx + 10, btn_y, 100, 40, "Back")
-        self.win_dialog.add_button(next_btn)
-        self.win_dialog.add_button(back_btn)
-        self._win_dialog_ready = True
+        self.pass_menu = PassMenuView(self.screen, score, self.model.level_id)
+        self.pass_menu.visible = True
+        self._pass_menu_ready = True
+
+    def try_autocomplete(self):
+        """每次修改地图后调用，若连通则启动小车"""
+        if self.showing_win:
+            return
+        if self.model.map.is_path_connected():
+            self.model.check_completion()      # 计算分数
+            self.showing_win = True
+            path = self.model.get_path()
+            if path:
+                self.car_view.start_move(path)
+                self._pass_menu_ready = False
 
     # ================= 事件处理 =================
     def handle_event(self, event: pg.event.Event) -> Optional[str]:
@@ -83,24 +100,25 @@ class GameLevelView:
                         btn.callback()
             return None
 
-        # 胜利对话框可见时处理按钮
-        if self.win_dialog.visible:
-            if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
-                pos = event.pos
-                for btn in self.win_dialog.buttons:
-                    if btn.rect.collidepoint(pos):
-                        if btn.text == "Next":
-                            return "next_level"
-                        elif btn.text == "Back":
-                            return "back_to_select"
+        # ★ 胜利状态：只处理通关菜单的事件，屏蔽地图操作
+        if self.showing_win:
+            if self.pass_menu is not None and self.pass_menu.visible:
+                action = self.pass_menu.handle_event(event)
+                if action == 'next_level':
+                    return 'next_level'
+                elif action == 'retry':
+                    self.reset_all()
+                    return None
             return None
 
         # 键盘操作
         if event.type == pg.KEYDOWN:
             if event.key == pg.K_r:
                 self.rotate_selected()
+                self.try_autocomplete()
             elif event.key in (pg.K_DELETE, pg.K_BACKSPACE):
                 self.remove_selected()
+                self.try_autocomplete()
             return None
 
         # 鼠标按下
@@ -108,7 +126,7 @@ class GameLevelView:
             pos = event.pos
 
             if event.button == 1:
-                # 库存按钮
+                # 库存按钮（选中类型并开始拖拽）
                 road_type = self.inventory.get_road_type_at(pos)
                 if road_type is not None:
                     self.selected_road_type = road_type
@@ -132,10 +150,11 @@ class GameLevelView:
                     if not locked and existing is None and self.selected_road_type is not None:
                         road = self.model.player_road_list.get_road(self.selected_road_type)
                         if road is not None:
-                            new_cell = RoadCellModel(r, c, road.road_type)
+                            new_cell = RoadCellModel(r, c, road.road_type, road_model=road)
                             self.model.map.set_cell(r, c, new_cell)
                             self.inventory.update_from_model(self.model.player_road_list)
                             self.model.start_timer()
+                            self.try_autocomplete()
                         else:
                             self.show_info("No more roads of this type!")
                     return None
@@ -150,13 +169,14 @@ class GameLevelView:
                         self.map_view.cell_views[r][c].trigger_rotate_animation(500)
                         cell.rotate()
                         self.model.start_timer()
+                        self.try_autocomplete()
                     return None
 
-        # 鼠标移动
+        # 鼠标移动（拖拽预览）
         if event.type == pg.MOUSEMOTION and self.is_dragging:
             self.drag_mouse_pos = event.pos
 
-        # 鼠标释放（拖放）
+        # 鼠标释放（拖放放置）
         if event.type == pg.MOUSEBUTTONUP and event.button == 1:
             if self.is_dragging:
                 pos = event.pos
@@ -168,11 +188,12 @@ class GameLevelView:
                     if not locked and existing is None:
                         road = self.model.player_road_list.get_road(self.selected_road_type)
                         if road is not None:
-                            new_cell = RoadCellModel(r, c, road.road_type)
+                            new_cell = RoadCellModel(r, c, road.road_type, road_model=road)
                             self.model.map.set_cell(r, c, new_cell)
                             self.inventory.update_from_model(self.model.player_road_list)
                             self.selected_cell = (r, c)
                             self.model.start_timer()
+                            self.try_autocomplete()
                         else:
                             self.show_info("No more roads of this type!")
                     elif not locked and existing is not None:
@@ -181,7 +202,7 @@ class GameLevelView:
                 self.drag_preview_road = None
                 return None
 
-        # 按钮点击（无拖拽）
+        # 按钮点击（无拖拽时）
         if event.type == pg.MOUSEBUTTONDOWN and event.button == 1 and not self.is_dragging:
             pos = event.pos
             if self.back_btn.rect.collidepoint(pos):
@@ -191,37 +212,19 @@ class GameLevelView:
                 return None
             if self.rotate_btn.rect.collidepoint(pos):
                 self.rotate_selected()
+                self.try_autocomplete()
                 return None
             if self.remove_btn.rect.collidepoint(pos):
                 self.remove_selected()
+                self.try_autocomplete()
                 return None
             if self.clear_btn.rect.collidepoint(pos):
                 self.selected_road_type = None
                 self.inventory.selected_type = None
                 self.selected_cell = None
                 return None
-            if self.submit_btn.rect.collidepoint(pos):
-                self.try_submit()
-                return None
 
         return None
-
-    def try_submit(self):
-        """提交检查：连通→启动小车；否则提示"""
-        if self.model.map.is_path_connected():
-            # 计算分数并设置完成状态
-            self.model.check_completion()
-            self.showing_win = True
-            path = self.model.get_path()
-            if path:
-                self.car_view = CarView(path, 120, (self.map_view.x, self.map_view.y))
-                self._win_dialog_ready = False   # 等待小车跑完再显示对话框
-            else:
-                # 极端情况：连通但没路径（不应发生），直接显示胜利对话框
-                self.setup_win_dialog()
-                self.win_dialog.show()
-        else:
-            self.show_info("Path not connected!\nKeep trying.")
 
     # ================= 旋转 / 移除 / 重置 =================
     def rotate_selected(self):
@@ -252,23 +255,32 @@ class GameLevelView:
         self.selected_cell = None
         self.selected_road_type = None
         self.inventory.selected_type = None
-        self.car_view = None
         self.showing_win = False
-        self.win_dialog.hide()
-        self._win_dialog_ready = False
+        self.pass_menu = None
+        self._pass_menu_ready = False
 
-    # ================= 更新与绘制 =================
+        # 重置小车到起点
+        start_cell = None
+        for r in range(self.model.map.rows):
+            for c in range(self.model.map.cols):
+                cell = self.model.map.get_cell(r, c)
+                if cell and cell.get_type() == RoadType.START_ROAD:
+                    start_cell = (r, c)
+                    break
+            if start_cell:
+                break
+        self.car_view = CarView(120, (self.map_view.x, self.map_view.y),
+                                start_grid=start_cell)
+
+
     def update(self):
         self.model.update_time()
+        self.car_view.update()
 
-        # 小车行驶
-        if self.car_view and self.showing_win:
-            self.car_view.update()
-            # 小车到达终点后，显示胜利对话框（仅一次）
-            if self.car_view.finished and not self._win_dialog_ready:
-                self.setup_win_dialog()
-                self.win_dialog.show()
-                self._win_dialog_ready = True
+        # 小车到终点后弹出通过菜单
+        if self.showing_win and self.car_view.finished and not self._pass_menu_ready:
+            self.show_pass_menu()
+            self._pass_menu_ready = True
 
     def draw(self):
         self.screen.fill((235, 245, 245))
@@ -286,7 +298,6 @@ class GameLevelView:
         self.rotate_btn.draw(self.screen)
         self.remove_btn.draw(self.screen)
         self.clear_btn.draw(self.screen)
-        self.submit_btn.draw(self.screen)
 
         self.map_view.draw()
         self.inventory.draw()
@@ -305,14 +316,13 @@ class GameLevelView:
             temp.set_alpha(150)
             self.screen.blit(temp, preview_rect)
 
-        # 小车行驶中
-        if self.car_view and self.showing_win:
-            self.car_view.draw(self.screen)
+        # 小车（始终绘制）
+        self.car_view.draw(self.screen)
 
-        # 胜利对话框（只有小车跑完或特殊情况下显示）
-        if self.win_dialog.visible:
-            self.win_dialog.draw(self.screen)
+        # 通关菜单（覆盖在小车上面）
+        if self.pass_menu is not None and self.pass_menu.visible:
+            self.pass_menu.draw()
 
-        # 信息提示对话框
+        # 提示对话框（最上层）
         if self.info_dialog.visible:
             self.info_dialog.draw(self.screen)
