@@ -77,7 +77,10 @@ class GameLevelModel:
         self.difficulty = config["difficulty"]
         layout = config["map"]
         roads_cfg = config["roads"]
-        # 根据布局填充 map
+
+        # ★ 先清空整个地图
+        self.map.reset()
+
         for r in range(4):
             for c in range(4):
                 cell_type = None
@@ -90,8 +93,17 @@ class GameLevelModel:
                     cell_type = RoadType.OBSTACLE_ROAD
                 if cell_type is not None:
                     cell = RoadCellModel(r, c, cell_type)
+                    # 旋转起点向右
+                    if cell_type == RoadType.START_ROAD:
+                        cell.rotate()
+                    # 旋转终点（关卡3终点朝左，其他朝上）
+                    if cell_type == RoadType.END_ROAD:
+                        if level_id == 3:
+                            cell.rotate();
+                            cell.rotate();
+                            cell.rotate()
                     self.map.set_cell(r, c, cell)
-        # 重新设置玩家可用道路（重置数量）
+
         self.player_road_list = NormalRoadListModel(*roads_cfg)
         self.score = 0
         self.is_complete = False
