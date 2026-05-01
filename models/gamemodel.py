@@ -5,6 +5,7 @@ from .map import MapModel
 from .roadlist import RoadListModel, NormalRoadListModel, AdminRoadListModel
 from .roadcell import RoadCellModel
 from .Road import RoadType
+from control.gamelevel import GameLevelController
 
 
 class Difficulty(Enum):
@@ -75,10 +76,36 @@ class GameLevelModel:
             self.load_level(level_id)
 
     def load_level(self, level_id: int):
-        config = LEVEL_CONFIGS[level_id]
-        layout = config["map"]
-        base_roads = config["roads"]
+        """
+        优先从文件加载关卡，如果文件不存在则使用硬编码配置
+        保持方法签名不变，但内部逻辑改为优先文件加载
+        """
+        # 尝试从文件加载
+        file_data = GameLevelController.load_from_file(level_id)
+    
+        if file_data:
+            # 使用文件数据
+            layout = file_data.map
+            base_roads = file_data.roads
+            print(f"Loaded level {level_id} from file")
+        elif level_id in LEVEL_CONFIGS:
+            # 回退到硬编码配置
+            config_data = LEVEL_CONFIGS[level_id]
+            layout = config_data["map"]
+            base_roads = config_data["roads"]
+            print(f"Loaded level {level_id} from built-in config")
+        else:
+            # 默认配置
+            layout = [
+                ['S', ' ', ' ', ' '],
+                [' ', 'O', ' ', ' '],
+                [' ', ' ', ' ', ' '],
+                [' ', ' ', ' ', 'E']
+            ]
+            base_roads = (10, 6, 3, 1)
+            print(f"No config found for level {level_id}, using default")
 
+        # 应用难度系数（这部分逻辑保持不变）
         if self.difficulty == Difficulty.EASY:
             factor = 1.5
         elif self.difficulty == Difficulty.HARD:
@@ -87,6 +114,7 @@ class GameLevelModel:
             factor = 1.0
         roads_cfg = tuple(max(0, int(x * factor)) for x in base_roads)
 
+        # 重置地图并填充（这部分逻辑保持不变）
         self.map.reset()
         for r in range(4):
             for c in range(4):
@@ -103,16 +131,18 @@ class GameLevelModel:
                     if cell_type == RoadType.START_ROAD:
                         cell.rotate()
                     if cell_type == RoadType.END_ROAD:
-                        if level_id == 3:
+                        if level_id == 3:  # 特殊处理 level 3
                             cell.rotate()
                             cell.rotate()
                             cell.rotate()
                     self.map.set_cell(r, c, cell)
 
+        # 设置道路列表
         self.player_road_list = NormalRoadListModel(*roads_cfg)
+    
+        # 重置游戏状态
         self.score = 0
         self.is_complete = False
-
         self.start_time = 0
         self.elapsed_time = 0
         self.active = False

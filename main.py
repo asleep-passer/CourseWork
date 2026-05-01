@@ -5,11 +5,13 @@ from view.main_menu_view import MainMenuView
 from view.level_select_view import LevelSelectView
 from view.difficulty_select_view import DifficultySelectView
 from view.game_level_view import GameLevelView
+from view.LevelEditorView import LevelEditorView
 
 STATE_MAIN_MENU = 0
 STATE_LEVEL_SELECT = 1
 STATE_DIFFICULTY = 2
 STATE_GAME = 3
+STATE_EDITOR = 4
 
 def main():
     pygame.init()
@@ -39,6 +41,10 @@ def main():
             if game_view is not None:
                 game_view.update()
                 game_view.draw()
+        elif state==STATE_EDITOR:
+            if game_view is not None:
+                game_view.update()
+                game_view.draw()
 
         pygame.display.flip()
 
@@ -51,6 +57,8 @@ def main():
                     result = main_menu_view.handle_click(event.pos)
                     if result == "Start Game":
                         state = STATE_LEVEL_SELECT
+                    elif result == "Level Editor":
+                        state = STATE_EDITOR
                     elif result == "Quit":
                         running = False
 
@@ -95,6 +103,15 @@ def main():
                             state = STATE_MAIN_MENU
                     elif action == "back_to_select":
                         state = STATE_LEVEL_SELECT
+
+            elif state==STATE_EDITOR:
+                if game_view is None:
+                    game_view = LevelEditorView(screen)
+                else: 
+                    action = game_view.handle_event(event)
+                    if action == "back_to_menu":
+                        state = STATE_MAIN_MENU
+
     pygame.quit()
     sys.exit()
 

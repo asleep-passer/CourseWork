@@ -74,6 +74,8 @@ class RoadListModel(ABC):
         if self._road_num[road_type]<0:
             return "inf"
         return self._road_num[road_type]
+    def set_road_num(self,road_type:rt,count:int):
+        self._road_num[road_type]=count
 
 
 

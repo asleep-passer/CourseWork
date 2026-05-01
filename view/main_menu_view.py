@@ -10,13 +10,12 @@ FONT_TITLE = pygame.font.Font(None, 50)
 # Background color for the main menu screen
 BACKGROUND_COLOR = (235, 245, 255)
 
-
 class MainMenuView:
     """
     UI View for the game's main menu screen.
-    Contains only two buttons: Start Game and Quit.
+    Contains three buttons: Start Game, Level Editor, and Quit.
     """
-
+    
     def __init__(self, w: int, h: int):
         """
         Initialize the main menu layout
@@ -31,7 +30,8 @@ class MainMenuView:
         center_x = w // 2 - 100
         # Add core menu buttons
         self.buttons.append(ButtonView(center_x, 250, 200, 50, "Start Game"))
-        self.buttons.append(ButtonView(center_x, 320, 200, 50, "Quit"))
+        self.buttons.append(ButtonView(center_x, 320, 200, 50, "Level Editor"))
+        self.buttons.append(ButtonView(center_x, 390, 200, 50, "Quit"))
 
     def draw(self, screen: pygame.Surface) -> None:
         """
