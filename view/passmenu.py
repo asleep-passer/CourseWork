@@ -49,11 +49,11 @@ class PassMenuView:
         self.visible = True
 
     def _calculate_stars_from_score(self, score: int) -> int:
-        if score >= 3000:
+        if score >= 1000:
             return 3
-        elif score >= 2000:
+        elif score >= 800:
             return 2
-        elif score >= 1000:
+        elif score >= 500:
             return 1
         return 0
 
