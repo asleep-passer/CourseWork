@@ -5,6 +5,7 @@ from typing import List, Tuple, Optional
 class CarView:
     def __init__(self, cell_size: int, map_offset: Tuple[int, int],
                  start_grid: Optional[Tuple[int, int]] = None):
+
         self.cell_size = cell_size
         self.map_offset = map_offset
         self.path: List[Tuple[int, int]] = []

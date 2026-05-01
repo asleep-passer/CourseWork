@@ -120,11 +120,6 @@ class PassMenuView:
         self.next_btn.draw(self.screen)
         self.retry_btn.draw(self.screen)
 
-        tip_font = pg.font.Font(None, 20)
-        tip_surf = tip_font.render("Click button to continue", True, (100, 100, 100))
-        tip_rect = tip_surf.get_rect(center=(self.dialog_x + self.dialog_w // 2, self.dialog_y + self.dialog_h - 25))
-        self.screen.blit(tip_surf, tip_rect)
-
     def set_visible(self, visible: bool) -> None:
         self.visible = visible
 
