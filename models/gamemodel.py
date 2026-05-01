@@ -77,12 +77,12 @@ class GameLevelModel:
 
     def check_completion(self) -> bool:
         """
-        Check if the level is completed based on the game rules.
+        Check if the level is completed based on path connectivity.
 
         Returns:
             bool: True if the level is complete, False otherwise.
         """
-        self.is_complete = self.score > 0
+        self.is_complete = self.map.is_path_connected()
         return self.is_complete
 
     def reset(self) -> None:
