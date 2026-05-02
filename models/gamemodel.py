@@ -6,7 +6,8 @@ from .roadlist import RoadListModel, NormalRoadListModel, AdminRoadListModel
 from .roadcell import RoadCellModel
 from .Road import RoadType
 from control.gamelevel import GameLevelController
-
+import os
+import config
 
 class Difficulty(Enum):
     EASY = 1
@@ -188,3 +189,57 @@ class GameLevelModel:
 
     def reset(self) -> None:
         self.load_level(self.level_id)
+
+    @classmethod
+    def load_from_custom_file(cls, level_id: int, difficulty: Difficulty = Difficulty.EASY):
+        import os
+        import config
+        from .roadlist import NormalRoadListModel
+        from .roadcell import RoadCellModel
+        from .map import MapModel
+
+        file_path = os.path.join(config.saves_path, f"level{level_id}.txt")
+        if not os.path.exists(file_path):
+            raise FileNotFoundError(f"Custom level file {file_path} not found")
+
+        with open(file_path, 'r') as f:
+            lines = f.read().strip().split('\n')
+            # 第一行 "4 4"
+            rows, cols = map(int, lines[0].split())
+            # 接下来4行：道路类型
+            type_grid = []
+            for i in range(4):
+                type_grid.append(list(map(int, lines[1 + i].split())))
+            # 再4行是锁定状态（忽略）
+            # 再4行是旋转状态（忽略）
+            # 最后一行是道路数量
+            last_line = lines[9] if len(lines) > 9 else ""
+            road_counts = list(map(int, last_line.split()))
+
+        model = cls.__new__(cls)
+        model.level_id = level_id
+        model.map = MapModel(rows=4, cols=4)
+        model.difficulty = difficulty
+        model.score = 0
+        model.is_complete = False
+        model.admin_road_list = None
+        model.player_road_list = NormalRoadListModel(*road_counts)
+        model.start_time = 0
+        model.elapsed_time = 0
+        model.active = False
+
+        for r in range(4):
+            for c in range(4):
+                t = type_grid[r][c]
+                cell = None
+                if t == 5:  # START
+                    cell = RoadCellModel(r, c, RoadType.START_ROAD)
+                elif t == 6:  # END
+                    cell = RoadCellModel(r, c, RoadType.END_ROAD)
+                elif t == 0:  # OBSTACLE
+                    cell = RoadCellModel(r, c, RoadType.OBSTACLE_ROAD)
+                # t == 7 表示空，cell 保持 None
+                if cell:
+                    model.map.set_cell(r, c, cell)
+
+        return model
