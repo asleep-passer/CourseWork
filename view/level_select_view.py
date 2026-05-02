@@ -19,22 +19,30 @@ class LevelSelectView:
         self.saves_path = saves_path
 
         self.back_button = ButtonView(w//2 - 60, h - 80, 120, 50, "Back")
+
         self.builtin_buttons = []
         btn_w, btn_h = 150, 50
         margin_x = (w - 2 * btn_w) // 3
         start_y = 150
-        rows = 2
-        cols = 2
         for i in range(4):
-            row = i // cols
-            col = i % cols
+            row = i // 2
+            col = i % 2
             x = margin_x + col * (btn_w + margin_x)
             y = start_y + row * (btn_h + 15)
             btn = ButtonView(x, y, btn_w, btn_h, f"Level {i+1}")
             self.builtin_buttons.append(btn)
 
-        self.custom_groups = []   # (play_btn, edit_btn, delete_btn, level_id)
+        self.custom_groups = []
         self._load_custom_levels()
+        self.background = None
+        try:
+            path = os.path.join("view", "assets", "backgrounds", "level_select.jpg")
+            print("[LevelSelect] Loading:", path)
+            img = pygame.image.load(path).convert()
+            self.background = pygame.transform.scale(img, (self.w, self.h))
+            print("[LevelSelect] Success!")
+        except Exception as e:
+            print("[LevelSelect] Background not loaded:", e)
 
     def _load_custom_levels(self):
         self.custom_groups.clear()
@@ -63,12 +71,15 @@ class LevelSelectView:
             x = start_x
             y = start_y + i * row_h
             play_btn = ButtonView(x, y, small_btn_w, small_btn_h, f"Play {num}")
-            edit_btn = ButtonView(x + small_btn_w + spacing, y, small_btn_w, small_btn_h, f"Edit")
-            del_btn = ButtonView(x + 2*(small_btn_w + spacing), y, small_btn_w, small_btn_h, f"Del")
+            edit_btn = ButtonView(x + small_btn_w + spacing, y, small_btn_w, small_btn_h, "Edit")
+            del_btn = ButtonView(x + 2*(small_btn_w + spacing), y, small_btn_w, small_btn_h, "Del")
             self.custom_groups.append((play_btn, edit_btn, del_btn, num))
 
     def draw(self, screen):
-        screen.fill(BG)
+        if self.background:
+            screen.blit(self.background, (0, 0))
+        else:
+            screen.fill(BG)
 
         title = FONT_TITLE.render("Select Level", True, (20, 40, 80))
         screen.blit(title, title.get_rect(center=(self.w//2, 60)))

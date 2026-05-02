@@ -18,11 +18,10 @@ class MainMenuView:
         self.buttons.append(ButtonView(center_x, 320, 200, 50, "Level Editor"))
         self.buttons.append(ButtonView(center_x, 390, 200, 50, "Quit"))
 
-        # 加载背景图
         self.background = None
         try:
             base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-            path = os.path.join(base_path, "view", "assets", "backgrounds", "main_menu.png")
+            path = os.path.join(base_path, "view", "assets", "backgrounds", "main_menu.jpg")
             img = pygame.image.load(path).convert()
             self.background = pygame.transform.scale(img, (self.w, self.h))
         except Exception as e:

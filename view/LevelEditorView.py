@@ -34,12 +34,12 @@ class EditorInventoryView:
             RoadType.CROSS_ROAD
         ]
 
-        self.buttons = []          # (rect, RoadType)
+        self.buttons = []
         self.counts = {}
         self.selected_type = None
 
-        self.minus_buttons = []    # (rect, RoadType)
-        self.plus_buttons = []     # (rect, RoadType)
+        self.minus_buttons = []
+        self.plus_buttons = []
 
         self._create_buttons()
 
@@ -55,10 +55,7 @@ class EditorInventoryView:
         for rt in self.editable_types:
             self.counts[rt] = str(self.model.player_road_list.get_road_num(rt))
 
-        pass
-
     def handle_click(self, pos):
-        # 先检查工具按钮
         for rect, rt in self.buttons:
             if rect.collidepoint(pos):
                 if rt in self.editor_types:
@@ -82,7 +79,6 @@ class EditorInventoryView:
         return None
 
     def _change_count(self, rt, delta):
-
         cur = int(self.counts[rt])
         cur += delta
         if cur < 0:
@@ -92,12 +88,10 @@ class EditorInventoryView:
         self.counts[rt] = str(cur)
 
     def apply_counts(self):
-        """将当前面板上的数量设置到模型中"""
         new_counts = []
         for rt in self.editable_types:
             new_counts.append(int(self.counts[rt]))
         self.model.player_road_list = NormalRoadListModel(*new_counts)
-
 
     def draw(self):
         title = self.font.render("Editor Tools", True, (0, 0, 0))
@@ -180,9 +174,15 @@ class LevelEditorView:
             ButtonView(400, 290, 80, 35, "OK", callback=self.info_dialog.hide)
         )
 
-        self.hint_cells = []
-        self.hint_timer = 0
         self.edit_level_id = None
+
+        self.background = None
+        try:
+            path = os.path.join("view", "assets", "backgrounds", "level_editor.png")
+            img = pg.image.load(path).convert()
+            self.background = pg.transform.scale(img, self.screen.get_size())
+        except Exception:
+            pass
 
     def show_info(self, msg: str):
         self.info_dialog.set_message(msg)
@@ -219,11 +219,11 @@ class LevelEditorView:
                 for c in range(4):
                     cell_type_num = type_map[r][c]
                     cell = None
-                    if cell_type_num == 5:      # START
+                    if cell_type_num == 5:
                         cell = RoadCellModel(r, c, RoadType.START_ROAD)
-                    elif cell_type_num == 6:    # END
+                    elif cell_type_num == 6:
                         cell = RoadCellModel(r, c, RoadType.END_ROAD)
-                    elif cell_type_num == 0:    # OBSTACLE
+                    elif cell_type_num == 0:
                         cell = RoadCellModel(r, c, RoadType.OBSTACLE_ROAD)
                     if cell:
                         self.model.map.set_cell(r, c, cell)
@@ -261,7 +261,6 @@ class LevelEditorView:
             level_id = self.edit_level_id
         else:
             level_id = self.get_next_level_id()
-
             self.edit_level_id = level_id
 
         file_path = os.path.join(config.saves_path, f"level{level_id}.txt")
@@ -353,9 +352,6 @@ class LevelEditorView:
                         if self.selected_road_type in [RoadType.START_ROAD, RoadType.END_ROAD, RoadType.OBSTACLE_ROAD]:
                             new_cell = RoadCellModel(r, c, self.selected_road_type)
                             self.model.map.set_cell(r, c, new_cell)
-                        else:
-
-                            pass
                     return None
 
                 self.selected_road_type = None
@@ -397,7 +393,10 @@ class LevelEditorView:
         pass
 
     def draw(self):
-        self.screen.fill((240, 248, 255))
+        if self.background:
+            self.screen.blit(self.background, (0, 0))
+        else:
+            self.screen.fill((240, 248, 255))
 
         self.back_btn.draw(self.screen)
         self.reset_btn.draw(self.screen)

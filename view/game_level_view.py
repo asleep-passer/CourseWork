@@ -67,20 +67,21 @@ class GameLevelView:
         self.car_view = CarView(120, (self.map_view.x, self.map_view.y),
                                 start_grid=start_cell)
 
-        # 加载背景图
         self.background = self._load_background()
 
     def _load_background(self):
-        """根据当前关卡编号和难度加载背景图，缩放至窗口大小。若找不到图片则返回 None"""
-        base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         level = self.model.level_id
-        difficulty = self.model.difficulty.name   # 'EASY', 'MEDIUM', 'HARD'
-        filename = f"level{level}_{difficulty}.png"
-        full_path = os.path.join(base_path, "view", "assets", "backgrounds", filename)
+        difficulty = self.model.difficulty.name
+
+        if level > 4:
+            path = os.path.join("view", "assets", "backgrounds", "custom_level_game.png")
+        else:
+            filename = f"level{level}_{difficulty}.png"
+            path = os.path.join("view", "assets", "backgrounds", filename)
+
         try:
-            img = pg.image.load(full_path).convert()
-            img = pg.transform.scale(img, self.screen.get_size())
-            return img
+            img = pg.image.load(path).convert()
+            return pg.transform.scale(img, self.screen.get_size())
         except Exception:
             return None
 
@@ -308,7 +309,6 @@ class GameLevelView:
                 break
         self.car_view = CarView(120, (self.map_view.x, self.map_view.y),
                                 start_grid=start_cell)
-        # 重新加载背景（以防难度变化）
         self.background = self._load_background()
 
     def update(self):
@@ -325,7 +325,6 @@ class GameLevelView:
             self._pass_menu_ready = True
 
     def draw(self):
-        # 绘制背景（最底层）
         if self.background:
             self.screen.blit(self.background, (0, 0))
         else:
