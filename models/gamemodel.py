@@ -100,28 +100,20 @@ class GameLevelModel:
         self.load_level(level_id)
 
     def load_level(self, level_id: int):
-        """
-        优先从文件加载关卡，如果文件不存在则使用硬编码配置
-        保持方法签名不变，但内部逻辑改为优先文件加载
-        """
-        # 尝试从文件加载
         file_data = GameLevelController.load_from_file(level_id)
     
         if file_data:
-            # 使用文件数据
             layout = file_data.map
             base_roads = file_data.roads
             rotation=file_data.rotation
             print(f"Loaded level {level_id} from file")
         elif level_id in LEVEL_CONFIGS:
-            # 回退到硬编码配置
             config_data = LEVEL_CONFIGS[level_id]
             layout = config_data["map"]
             base_roads = config_data["roads"]
             rotation=config_data["rotation"]
             print(f"Loaded level {level_id} from built-in config")
         else:
-            # 默认配置
             layout = [
                 ['S', ' ', ' ', ' '],
                 [' ', 'O', ' ', ' '],
@@ -137,7 +129,6 @@ class GameLevelModel:
             ]
             print(f"No config found for level {level_id}, using default")
 
-        # 应用难度系数（这部分逻辑保持不变）
         if self.difficulty == Difficulty.EASY:
             factor = 1.5
         elif self.difficulty == Difficulty.HARD:
@@ -146,7 +137,6 @@ class GameLevelModel:
             factor = 1.0
         roads_cfg = tuple(max(0, int(x * factor)) for x in base_roads)
 
-        # 重置地图并填充（这部分逻辑保持不变）
         self.map.reset()
         for r in range(4):
             for c in range(4):
@@ -166,10 +156,8 @@ class GameLevelModel:
                         
                     self.map.set_cell(r, c, cell)
 
-        # 设置道路列表
         self.player_road_list = NormalRoadListModel(*roads_cfg)
-    
-        # 重置游戏状态
+
         self.score = 0
         self.is_complete = False
         self.start_time = 0
@@ -233,15 +221,11 @@ class GameLevelModel:
 
         with open(file_path, 'r') as f:
             lines = f.read().strip().split('\n')
-            # 第一行 "4 4"
             rows, cols = map(int, lines[0].split())
-            # 接下来4行：道路类型
             type_grid = []
             for i in range(4):
                 type_grid.append(list(map(int, lines[1 + i].split())))
-            # 再4行是锁定状态（忽略）
-            # 再4行是旋转状态（忽略）
-            # 最后一行是道路数量
+
             last_line = lines[9] if len(lines) > 9 else ""
             road_counts = list(map(int, last_line.split()))
 
@@ -267,7 +251,6 @@ class GameLevelModel:
                     cell = RoadCellModel(r, c, RoadType.END_ROAD)
                 elif t == 0:  # OBSTACLE
                     cell = RoadCellModel(r, c, RoadType.OBSTACLE_ROAD)
-                # t == 7 表示空，cell 保持 None
                 if cell:
                     model.map.set_cell(r, c, cell)
 

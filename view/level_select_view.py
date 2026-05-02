@@ -18,13 +18,11 @@ class LevelSelectView:
         self.h = h
         self.saves_path = saves_path
 
-        # 返回按钮
         self.back_button = ButtonView(w//2 - 60, h - 80, 120, 50, "Back")
 
-        # 内置关卡按钮（固定4个）
         self.builtin_buttons = []
         btn_w, btn_h = 150, 50
-        margin_x = (w - 2 * btn_w) // 3          # 两列，左右留空
+        margin_x = (w - 2 * btn_w) // 3
         start_y = 150
         rows = 2
         cols = 2
@@ -36,7 +34,6 @@ class LevelSelectView:
             btn = ButtonView(x, y, btn_w, btn_h, f"Level {i+1}")
             self.builtin_buttons.append(btn)
 
-        # 自定义关卡数据（Play, Edit, Delete 按钮组）
         self.custom_groups = []   # (play_btn, edit_btn, delete_btn, level_id)
         self._load_custom_levels()
 
@@ -54,7 +51,7 @@ class LevelSelectView:
                 nums.append(num)
             except ValueError:
                 continue
-        nums = sorted(nums)[:12]   # 最多12个
+        nums = sorted(nums)[:12]
 
         small_btn_w, small_btn_h = 100, 35
         spacing = 8
@@ -74,12 +71,9 @@ class LevelSelectView:
     def draw(self, screen):
         screen.fill(BG)
 
-        # 标题
         title = FONT_TITLE.render("Select Level", True, (20, 40, 80))
         screen.blit(title, title.get_rect(center=(self.w//2, 60)))
 
-        # --------- 内置关卡区域 ---------
-        # 区域背景
         builtin_rect = pygame.Rect(20, 110, self.w - 40, 160)
         pygame.draw.rect(screen, BUILTIN_BG, builtin_rect, border_radius=12)
         pygame.draw.rect(screen, BORDER_COLOR, builtin_rect, 2, border_radius=12)
@@ -90,7 +84,6 @@ class LevelSelectView:
         for btn in self.builtin_buttons:
             btn.draw(screen)
 
-        # --------- 自定义关卡区域 ---------
         custom_y_start = 290
         custom_height = min(40 + len(self.custom_groups) * 45, 300)
         custom_rect = pygame.Rect(20, custom_y_start, self.w - 40, custom_height)
@@ -106,16 +99,13 @@ class LevelSelectView:
             edit_btn.draw(screen)
             del_btn.draw(screen)
 
-        # 返回按钮
         self.back_button.draw(screen)
 
     def handle_click(self, mouse_pos: Tuple[int, int]) -> Optional[str]:
-        # 内置关卡按钮
         for i, btn in enumerate(self.builtin_buttons):
             if btn.rect.collidepoint(mouse_pos):
                 return f"play_builtin_{i+1}"
 
-        # 自定义关卡按钮
         for play_btn, edit_btn, del_btn, level_id in self.custom_groups:
             if play_btn.rect.collidepoint(mouse_pos):
                 return f"play_custom_{level_id}"

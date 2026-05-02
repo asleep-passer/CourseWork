@@ -35,7 +35,7 @@ class EditorInventoryView:
         ]
 
         self.buttons = []
-        self.counts = {}          # 仅保存数字文本
+        self.counts = {}
         self.selected_type = None
         self._create_buttons()
 
@@ -47,7 +47,6 @@ class EditorInventoryView:
             btn_rect = pg.Rect(self.x, self.y + i * spacing, btn_width, btn_height)
             self.buttons.append((btn_rect, rt))
 
-        # 初始数字从模型获取
         for rt in self.editable_types:
             self.counts[rt] = str(self.model.player_road_list.get_road_num(rt))
 
@@ -62,14 +61,12 @@ class EditorInventoryView:
         return None
 
     def apply_counts(self):
-        # 目前计数不可编辑，保留接口
         pass
 
     def draw(self):
         title = self.font.render("Editor Tools", True, (0, 0, 0))
         self.screen.blit(title, (self.x, self.y - 45))
 
-        # 三个特殊工具按钮（障碍、起点、终点）
         for rect, rt in self.buttons:
             if rt in self.editor_types:
                 is_selected = (rt == self.selected_type)
@@ -82,12 +79,10 @@ class EditorInventoryView:
                 text_rect = text.get_rect(center=rect.center)
                 self.screen.blit(text, text_rect)
 
-        # Available Roads 标题
         section_title = self.font.render("Available Roads", True, (0, 0, 0))
         section_y = self.y + len(self.editor_types) * 60 + 20
         self.screen.blit(section_title, (self.x, section_y))
 
-        # 四种可编辑道路及其数量
         row_spacing = 35
         start_y = section_y + 40
         for i, rt in enumerate(self.editable_types):
@@ -110,8 +105,6 @@ class LevelEditorView:
         w, h = screen.get_size()
         map_x = 50
         map_y = 130
-
-        # 临时模型，真实关卡在保存时才确定编号
         self.model = GameLevelModel(level_id=999)
         self.model.map = MapModel(rows=4, cols=4)
         self.model.player_road_list = NormalRoadListModel(10, 6, 3, 1)
@@ -138,11 +131,8 @@ class LevelEditorView:
             ButtonView(400, 290, 80, 35, "OK", callback=self.info_dialog.hide)
         )
 
-        # 编辑器不关心提示路径，但保留变量以防旧代码引用
         self.hint_cells = []
         self.hint_timer = 0
-
-        # 当前正在编辑的关卡编号（None 表示新建）
         self.edit_level_id = None
 
     def show_info(self, msg: str):
@@ -150,7 +140,6 @@ class LevelEditorView:
         self.info_dialog.show()
 
     def get_next_level_id(self):
-        """返回最小的可用自定义关卡编号，从 5 开始"""
         level_id = 5
         while True:
             file_path = os.path.join(config.saves_path, f"level{level_id}.txt")
@@ -159,7 +148,6 @@ class LevelEditorView:
             level_id += 1
 
     def load_level(self, level_id: int):
-        """从文件加载关卡数据，填充编辑器地图和库存数量"""
         file_path = os.path.join(config.saves_path, f"level{level_id}.txt")
         if not os.path.exists(file_path):
             self.show_info(f"Level file level{level_id}.txt not found!")
@@ -168,19 +156,14 @@ class LevelEditorView:
         try:
             with open(file_path, 'r') as f:
                 lines = f.read().strip().split('\n')
-                # 第一行 4 4
                 rows, cols = map(int, lines[0].split())
-                # 接下来4行：道路类型 (0-7)
                 type_map = []
                 for i in range(4):
                     type_map.append(list(map(int, lines[1 + i].split())))
-                # 再4行是锁定状态（忽略）
-                # 再4行是旋转状态（忽略）
-                # 最后一行是道路数量
+
                 last_line = lines[9] if len(lines) > 9 else ""
                 counts = list(map(int, last_line.split()))
 
-            # 清空并重建地图
             self.model.map.reset()
 
             for r in range(4):
@@ -193,26 +176,21 @@ class LevelEditorView:
                         cell = RoadCellModel(r, c, RoadType.END_ROAD)
                     elif cell_type_num == 0:    # OBSTACLE
                         cell = RoadCellModel(r, c, RoadType.OBSTACLE_ROAD)
-                    # 7 或其它数字视为空，cell 保持 None
                     if cell:
                         self.model.map.set_cell(r, c, cell)
 
-            # 更新库存数量
             self.model.player_road_list = NormalRoadListModel(*counts)
             for rt in self.inventory.editable_types:
                 self.inventory.counts[rt] = str(self.model.player_road_list.get_road_num(rt))
 
-            # 设置为编辑已有关卡模式
             self.edit_level_id = level_id
 
-            # 清除当前选中状态
             self.clear_selection()
 
         except Exception as e:
             self.show_info(f"Error loading level: {str(e)}")
 
     def save_level(self):
-        """保存当前编辑的关卡。若为编辑已有关卡则覆盖原文件，否则创建新文件"""
         self.inventory.apply_counts()
 
         start_count = 0
@@ -230,12 +208,11 @@ class LevelEditorView:
             self.show_info("Error: Level must have at\nleast one start and one end point!")
             return False
 
-        # 决定保存编号
         if self.edit_level_id is not None:
             level_id = self.edit_level_id
         else:
             level_id = self.get_next_level_id()
-            # 新建成功后，后续再按保存即为编辑该编号
+
             self.edit_level_id = level_id
 
         file_path = os.path.join(config.saves_path, f"level{level_id}.txt")
@@ -244,7 +221,6 @@ class LevelEditorView:
             with open(file_path, 'w') as f:
                 f.write("4 4\n")
 
-                # 道路类型矩阵
                 road_types = []
                 for r in range(4):
                     row = []
@@ -264,15 +240,12 @@ class LevelEditorView:
                     road_types.append(" ".join(row))
                 f.write("\n".join(road_types) + "\n")
 
-                # 锁定状态（全为0）
                 locked_status = ["0 0 0 0"] * 4
                 f.write("\n".join(locked_status) + "\n")
 
-                # 旋转状态（全为0）
                 rotation_status = ["0 0 0 0"] * 4
                 f.write("\n".join(rotation_status) + "\n")
 
-                # 可用道路数量
                 straight = self.model.player_road_list.get_road_num(RoadType.STRAIGHT_ROAD)
                 bend = self.model.player_road_list.get_road_num(RoadType.BEND_ROAD)
                 t_shape = self.model.player_road_list.get_road_num(RoadType.T_SHAPED_ROAD)
@@ -332,7 +305,7 @@ class LevelEditorView:
                             new_cell = RoadCellModel(r, c, self.selected_road_type)
                             self.model.map.set_cell(r, c, new_cell)
                         else:
-                            # 普通道路类型不会在编辑器中出现，忽略
+
                             pass
                     return None
 
@@ -387,7 +360,6 @@ class LevelEditorView:
 
         self.inventory.draw()
 
-        # 绘制网格线
         for r in range(5):
             pg.draw.line(self.screen, (100, 100, 100),
                          (self.map_view.x, self.map_view.y + r * 120),

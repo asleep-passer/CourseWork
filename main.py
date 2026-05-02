@@ -35,7 +35,6 @@ def main():
     while running:
         clock.tick(60)
 
-        # ---- 绘制当前状态 ----
         if state == STATE_MAIN_MENU:
             main_menu_view.draw(screen)
         elif state == STATE_LEVEL_SELECT:
@@ -53,12 +52,10 @@ def main():
 
         pygame.display.flip()
 
-        # ---- 事件处理 ----
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
 
-            # ========== 主菜单 ==========
             if state == STATE_MAIN_MENU:
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     result = main_menu_view.handle_click(event.pos)
@@ -70,31 +67,26 @@ def main():
                     elif result == "Quit":
                         running = False
 
-            # ========== 关卡选择 ==========
             elif state == STATE_LEVEL_SELECT:
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     result = level_select_view.handle_click(event.pos)
                     if result is None:
                         continue
 
-                    # 内置关卡
                     if result.startswith("play_builtin_"):
                         pending_level_id = int(result.split("_")[-1])
                         state = STATE_DIFFICULTY
 
-                    # 自定义关卡 play
                     elif result.startswith("play_custom_"):
                         pending_level_id = int(result.split("_")[-1])
                         state = STATE_DIFFICULTY
 
-                    # 自定义关卡 edit
                     elif result.startswith("edit_custom_"):
                         level_id = int(result.split("_")[-1])
                         editor_view = LevelEditorView(screen)
                         editor_view.load_level(level_id)
                         state = STATE_EDITOR
 
-                    # 自定义关卡 delete
                     elif result.startswith("delete_custom_"):
                         level_id = int(result.split("_")[-1])
                         file_path = os.path.join(config.saves_path, f"level{level_id}.txt")
@@ -105,7 +97,6 @@ def main():
                     elif result == "back_to_menu":
                         state = STATE_MAIN_MENU
 
-            # ========== 难度选择 ==========
             elif state == STATE_DIFFICULTY:
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     result = difficulty_select_view.handle_click(event.pos)
@@ -119,7 +110,6 @@ def main():
                         }
                         difficulty = diff_map[result]
 
-                        # 加载关卡（内置或自定义）
                         if pending_level_id <= 4:
                             game_model = GameLevelModel(level_id=pending_level_id, difficulty=difficulty)
                         else:
@@ -127,7 +117,6 @@ def main():
                         game_view = GameLevelView(screen, game_model)
                         state = STATE_GAME
 
-            # ========== 游戏中 ==========
             elif state == STATE_GAME:
                 if game_view is not None:
                     action = game_view.handle_event(event)
@@ -141,7 +130,6 @@ def main():
                             game_model = GameLevelModel(level_id=next_id, difficulty=game_model.difficulty)
                             game_view = GameLevelView(screen, game_model)
                         else:
-                            # 检查自定义关卡文件是否存在
                             file_path = os.path.join(config.saves_path, f"level{next_id}.txt")
                             if os.path.exists(file_path):
                                 pending_level_id = next_id
@@ -153,7 +141,6 @@ def main():
                     elif action == "back_to_select":
                         state = STATE_LEVEL_SELECT
 
-            # ========== 关卡编辑器 ==========
             elif state == STATE_EDITOR:
                 if editor_view is not None:
                     action = editor_view.handle_event(event)
@@ -161,7 +148,6 @@ def main():
                         level_select_view.refresh_levels()
                         editor_view = None
                         state = STATE_MAIN_MENU
-                    # 其他编辑器动作不改变状态
 
     pygame.quit()
     sys.exit()
