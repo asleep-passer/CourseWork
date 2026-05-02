@@ -221,22 +221,37 @@ class GameLevelModel:
 
         with open(file_path, 'r') as f:
             lines = f.read().strip().split('\n')
+            if len(lines) < 2:
+                raise ValueError("Invalid level file format")
+
             rows, cols = map(int, lines[0].split())
+
             type_grid = []
             for i in range(4):
                 type_grid.append(list(map(int, lines[1 + i].split())))
 
-            last_line = lines[9] if len(lines) > 9 else ""
-            road_counts = list(map(int, last_line.split()))
+            last_line = lines[-1] if len(lines) > 0 else "10 6 3 1"
+            raw_counts = list(map(int, last_line.split()))
+            while len(raw_counts) < 4:
+                raw_counts.append(0)
+            raw_counts = raw_counts[:4]
+
+        if difficulty == Difficulty.EASY:
+            factor = 1.5
+        elif difficulty == Difficulty.HARD:
+            factor = 0.7
+        else:
+            factor = 1.0
+        road_counts = tuple(max(0, int(x * factor)) for x in raw_counts)
 
         model = cls.__new__(cls)
         model.level_id = level_id
-        model.map = MapModel(rows=4, cols=4)
         model.difficulty = difficulty
+        model.map = MapModel(rows=4, cols=4)
+        model.player_road_list = NormalRoadListModel(*road_counts)
+        model.admin_road_list = None
         model.score = 0
         model.is_complete = False
-        model.admin_road_list = None
-        model.player_road_list = NormalRoadListModel(*road_counts)
         model.start_time = 0
         model.elapsed_time = 0
         model.active = False
@@ -245,9 +260,9 @@ class GameLevelModel:
             for c in range(4):
                 t = type_grid[r][c]
                 cell = None
-                if t == 5:  # START
+                if t == 5:  # START_ROAD
                     cell = RoadCellModel(r, c, RoadType.START_ROAD)
-                elif t == 6:  # END
+                elif t == 6:  # END_ROAD
                     cell = RoadCellModel(r, c, RoadType.END_ROAD)
                 elif t == 0:  # OBSTACLE
                     cell = RoadCellModel(r, c, RoadType.OBSTACLE_ROAD)

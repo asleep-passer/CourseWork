@@ -9,6 +9,7 @@ from view.passmenu import PassMenuView
 from models.gamemodel import GameLevelModel
 from models.Road import RoadType
 from models.roadcell import RoadCellModel
+import os
 
 class GameLevelView:
     def __init__(self, screen: pg.Surface, level_model: GameLevelModel):

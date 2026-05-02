@@ -34,15 +34,20 @@ class EditorInventoryView:
             RoadType.CROSS_ROAD
         ]
 
-        self.buttons = []
+        self.buttons = []          # (rect, RoadType)
         self.counts = {}
         self.selected_type = None
+
+        self.minus_buttons = []    # (rect, RoadType)
+        self.plus_buttons = []     # (rect, RoadType)
+
         self._create_buttons()
 
     def _create_buttons(self):
         btn_width = 180
         btn_height = 50
         spacing = 55
+
         for i, rt in enumerate(self.editor_types):
             btn_rect = pg.Rect(self.x, self.y + i * spacing, btn_width, btn_height)
             self.buttons.append((btn_rect, rt))
@@ -50,18 +55,49 @@ class EditorInventoryView:
         for rt in self.editable_types:
             self.counts[rt] = str(self.model.player_road_list.get_road_num(rt))
 
+        pass
+
     def handle_click(self, pos):
+        # 先检查工具按钮
         for rect, rt in self.buttons:
             if rect.collidepoint(pos):
                 if rt in self.editor_types:
                     self.selected_type = rt
                     return rt
-                elif rt in self.editable_types:
-                    continue
+
+        section_y = self.y + len(self.editor_types) * 60 + 20
+        start_y = section_y + 40
+        row_spacing = 35
+        btn_w, btn_h = 30, 25
+        for i, rt in enumerate(self.editable_types):
+            label_y = start_y + i * row_spacing
+            minus_rect = pg.Rect(self.x + 90, label_y - 5, btn_w, btn_h)
+            plus_rect = pg.Rect(self.x + 140, label_y - 5, btn_w, btn_h)
+            if minus_rect.collidepoint(pos):
+                self._change_count(rt, -1)
+                return rt
+            elif plus_rect.collidepoint(pos):
+                self._change_count(rt, 1)
+                return rt
         return None
 
+    def _change_count(self, rt, delta):
+
+        cur = int(self.counts[rt])
+        cur += delta
+        if cur < 0:
+            cur = 0
+        if cur > 999:
+            cur = 999
+        self.counts[rt] = str(cur)
+
     def apply_counts(self):
-        pass
+        """将当前面板上的数量设置到模型中"""
+        new_counts = []
+        for rt in self.editable_types:
+            new_counts.append(int(self.counts[rt]))
+        self.model.player_road_list = NormalRoadListModel(*new_counts)
+
 
     def draw(self):
         title = self.font.render("Editor Tools", True, (0, 0, 0))
@@ -85,15 +121,28 @@ class EditorInventoryView:
 
         row_spacing = 35
         start_y = section_y + 40
+        btn_w, btn_h = 30, 25
         for i, rt in enumerate(self.editable_types):
             label_y = start_y + i * row_spacing
 
             type_text = self.small_font.render(rt.name.replace("_ROAD", ""), True, (0, 0, 0))
             self.screen.blit(type_text, (self.x, label_y))
 
+            minus_rect = pg.Rect(self.x + 90, label_y - 5, btn_w, btn_h)
+            pg.draw.rect(self.screen, (200, 200, 200), minus_rect)
+            pg.draw.rect(self.screen, (0, 0, 0), minus_rect, 2)
+            minus_text = self.small_font.render("-", True, (0, 0, 0))
+            self.screen.blit(minus_text, (minus_rect.x + 8, minus_rect.y))
+
             count_str = self.counts[rt]
-            count_text = self.small_font.render(f"Count: {count_str}", True, (0, 0, 0))
-            self.screen.blit(count_text, (self.x + 110, label_y))
+            count_text = self.small_font.render(count_str, True, (0, 0, 0))
+            self.screen.blit(count_text, (self.x + 120, label_y))
+
+            plus_rect = pg.Rect(self.x + 140, label_y - 5, btn_w, btn_h)
+            pg.draw.rect(self.screen, (200, 200, 200), plus_rect)
+            pg.draw.rect(self.screen, (0, 0, 0), plus_rect, 2)
+            plus_text = self.small_font.render("+", True, (0, 0, 0))
+            self.screen.blit(plus_text, (plus_rect.x + 8, plus_rect.y))
 
 
 class LevelEditorView:
@@ -161,7 +210,7 @@ class LevelEditorView:
                 for i in range(4):
                     type_map.append(list(map(int, lines[1 + i].split())))
 
-                last_line = lines[9] if len(lines) > 9 else ""
+                last_line = lines[-1] if lines else ""
                 counts = list(map(int, last_line.split()))
 
             self.model.map.reset()
