@@ -22,6 +22,7 @@ class GameLevelView:
         map_x = 50
         map_y = 130
         self.map_view = MapView(level_model.map, map_x, map_y, 120, screen)
+        
 
         self.inventory = InventoryView(map_x + 4*120 + 40, map_y + 10, screen)
         self.inventory.update_from_model(level_model.player_road_list)

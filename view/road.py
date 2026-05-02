@@ -58,8 +58,10 @@ class RoadView:
     def __normalize_angle(self, angle: float):
         return angle % 360
 
-    def rotated(self, duration: int = 500):
+    def rotated(self,fix:int=0, duration: int = 500):
         self.road.rotate()
+        for _ in range(fix):
+            self.road.rotate()
         if self.__is_rotating:
             return
         self.__is_rotating = True
