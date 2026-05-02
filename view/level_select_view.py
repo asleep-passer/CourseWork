@@ -19,7 +19,6 @@ class LevelSelectView:
         self.saves_path = saves_path
 
         self.back_button = ButtonView(w//2 - 60, h - 80, 120, 50, "Back")
-
         self.builtin_buttons = []
         btn_w, btn_h = 150, 50
         margin_x = (w - 2 * btn_w) // 3

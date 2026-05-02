@@ -23,7 +23,6 @@ class GameLevelView:
         map_x = 50
         map_y = 130
         self.map_view = MapView(level_model.map, map_x, map_y, 120, screen)
-        
 
         self.inventory = InventoryView(map_x + 4*120 + 40, map_y + 10, screen)
         self.inventory.update_from_model(level_model.player_road_list)
@@ -53,7 +52,6 @@ class GameLevelView:
         self.car_view = None
         self.showing_win = False
 
-
         self.hint_cells = []
         self.hint_timer = 0
 
@@ -68,6 +66,23 @@ class GameLevelView:
                 break
         self.car_view = CarView(120, (self.map_view.x, self.map_view.y),
                                 start_grid=start_cell)
+
+        # 加载背景图
+        self.background = self._load_background()
+
+    def _load_background(self):
+        """根据当前关卡编号和难度加载背景图，缩放至窗口大小。若找不到图片则返回 None"""
+        base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        level = self.model.level_id
+        difficulty = self.model.difficulty.name   # 'EASY', 'MEDIUM', 'HARD'
+        filename = f"level{level}_{difficulty}.png"
+        full_path = os.path.join(base_path, "view", "assets", "backgrounds", filename)
+        try:
+            img = pg.image.load(full_path).convert()
+            img = pg.transform.scale(img, self.screen.get_size())
+            return img
+        except Exception:
+            return None
 
     def show_info(self, msg: str):
         self.info_dialog.set_message(msg)
@@ -293,6 +308,8 @@ class GameLevelView:
                 break
         self.car_view = CarView(120, (self.map_view.x, self.map_view.y),
                                 start_grid=start_cell)
+        # 重新加载背景（以防难度变化）
+        self.background = self._load_background()
 
     def update(self):
         self.model.update_time()
@@ -308,7 +325,11 @@ class GameLevelView:
             self._pass_menu_ready = True
 
     def draw(self):
-        self.screen.fill((235, 245, 245))
+        # 绘制背景（最底层）
+        if self.background:
+            self.screen.blit(self.background, (0, 0))
+        else:
+            self.screen.fill((235, 245, 245))
 
         diff_str = f"Level {self.model.level_id}  {self.model.difficulty.name}"
         time_str = f"Time: {self.model.get_elapsed_seconds():.1f}s"
