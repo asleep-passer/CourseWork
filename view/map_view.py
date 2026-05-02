@@ -6,6 +6,7 @@ from view.road_cell_view import RoadCellView
 class MapView:
     def __init__(self, map_model: MapModel, x: int, y: int, cell_size: int, screen: pygame.Surface):
         self.map_model = map_model
+        
         self.x = x
         self.y = y
         self.cell_size = cell_size

@@ -21,6 +21,12 @@ LEVEL_CONFIGS = {
             [' ', ' ', ' ', ' '],
             [' ', ' ', ' ', 'E']
         ],
+        "roataion":[
+            [0,0,0,0],
+            [0,0,0,0],
+            [0,0,0,0],
+            [0,0,0,0]
+        ],
         "roads": (10, 6, 3, 1),
     },
     2: {
@@ -29,6 +35,12 @@ LEVEL_CONFIGS = {
             [' ', ' ', ' ', ' '],
             [' ', 'O', ' ', ' '],
             [' ', ' ', ' ', 'E']
+        ],
+        "rotation":[
+            [0,0,0,0],
+            [0,0,0,0],
+            [0,0,0,0],
+            [0,0,0,0]
         ],
         "roads": (8, 4, 2, 0),
     },
@@ -39,6 +51,12 @@ LEVEL_CONFIGS = {
             [' ', ' ', ' ', ' '],
             ['O', ' ', ' ', 'E']
         ],
+        "rotation":[
+            [0,0,0,0],
+            [0,0,0,0],
+            [0,0,0,0],
+            [0,0,0,0]
+        ],
         "roads": (6, 4, 2, 1),
     },
     4: {
@@ -47,6 +65,12 @@ LEVEL_CONFIGS = {
             [' ', ' ', ' ', 'O'],
             ['O', ' ', ' ', ' '],
             [' ', ' ', 'O', 'E']
+        ],
+        "rotation":[
+            [0,0,0,0],
+            [0,0,0,0],
+            [0,0,0,0],
+            [0,0,0,0]
         ],
         "roads": (4, 4, 2, 0),
     }
@@ -86,12 +110,14 @@ class GameLevelModel:
             # 使用文件数据
             layout = file_data.map
             base_roads = file_data.roads
+            rotation=file_data.rotation
             print(f"Loaded level {level_id} from file")
         elif level_id in LEVEL_CONFIGS:
             # 回退到硬编码配置
             config_data = LEVEL_CONFIGS[level_id]
             layout = config_data["map"]
             base_roads = config_data["roads"]
+            rotation=config_data["rotation"]
             print(f"Loaded level {level_id} from built-in config")
         else:
             # 默认配置
@@ -102,6 +128,12 @@ class GameLevelModel:
                 [' ', ' ', ' ', 'E']
             ]
             base_roads = (10, 6, 3, 1)
+            rotation=[
+                [0,0,0,0],
+                [0,0,0,0],
+                [0,0,0,0],
+                [0,0,0,0]
+            ]
             print(f"No config found for level {level_id}, using default")
 
         # 应用难度系数（这部分逻辑保持不变）
@@ -119,6 +151,7 @@ class GameLevelModel:
             for c in range(4):
                 cell_type = None
                 char = layout[r][c]
+                rotate=rotation[r][c]
                 if char == 'S':
                     cell_type = RoadType.START_ROAD
                 elif char == 'E':
@@ -127,13 +160,9 @@ class GameLevelModel:
                     cell_type = RoadType.OBSTACLE_ROAD
                 if cell_type is not None:
                     cell = RoadCellModel(r, c, cell_type)
-                    if cell_type == RoadType.START_ROAD:
+                    for _ in range(rotate):
                         cell.rotate()
-                    if cell_type == RoadType.END_ROAD:
-                        if level_id == 3:  # 特殊处理 level 3
-                            cell.rotate()
-                            cell.rotate()
-                            cell.rotate()
+                        
                     self.map.set_cell(r, c, cell)
 
         # 设置道路列表

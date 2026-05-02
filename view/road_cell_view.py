@@ -10,17 +10,24 @@ class RoadCellView:
         self._current_cell = None
         self.font = pygame.font.Font(None, 20)
 
-    def draw(self, cell_model):
+    def draw(self, cell_model:RoadCellModel):
         if cell_model is None:
             pygame.draw.rect(self.screen, (210, 210, 210), self.rect)
             pygame.draw.rect(self.screen, (170, 170, 170), self.rect, 1)
             self._current_cell = None
             return
-
+        
         if self._road_view is None or self._current_cell != cell_model:
-            self._road_view = RoadView(cell_model, self.screen, self.rect)
+            self._road_view = RoadView(cell_model.road_model, self.screen, self.rect)
             self._current_cell = cell_model
-
+            t=cell_model.road_model._rotated
+            print(t)
+            if self._road_view.road._rotated!=0:
+                for _ in range(t):
+                    self._road_view.rotated(3,0)
+        
+        
+        
         self._road_view.set_position(self.rect)
         self._road_view.draw()
 
@@ -39,4 +46,4 @@ class RoadCellView:
 
     def trigger_rotate_animation(self, duration=500):
         if self._road_view is not None:
-            self._road_view.rotated(duration)
+            self._road_view.rotated(0,duration)

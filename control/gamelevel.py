@@ -9,6 +9,8 @@ class GameLevelController:
     def __init__(self):
         self.map: List[List[str]] = []  # 4x4 网格，包含 'S', 'E', 'O', ' '
         self.roads: Tuple[int, int, int, int] = (0, 0, 0, 0)  # (straight, curve, t_junction, cross)
+        self.locked: List[List[bool]] = [[False]*4 for _ in range(4)]  # 锁定状态
+        self.rotation: List[List[int]] = [[0]*4 for _ in range(4)]  # 旋转状态 (0, 1, 2, 3) 对应 (0, 90, 180, 270) 度
 
     @classmethod
     def load_from_file(cls, level_id: int) -> Optional['GameLevelController']:
@@ -39,11 +41,23 @@ class GameLevelController:
                 road_types.append(row)
                 current_line += 1
             
-            # 读取锁定状态（这里我们不使用，因为硬编码配置中没有锁定信息）
-            current_line += rows  # 跳过锁定状态
+            # 读取锁定状态
+            data.locked = []
+            for _ in range(rows):
+                if current_line >= len(lines):
+                    break
+                row = list(map(int, lines[current_line].strip().split()))
+                data.locked.append([bool(x) for x in row])
+                current_line += 1
             
-            # 读取旋转状态（这里我们不使用，因为硬编码配置中没有旋转信息）
-            current_line += rows  # 跳过旋转状态
+            # 读取旋转状态
+            data.rotation = []
+            for _ in range(rows):
+                if current_line >= len(lines):
+                    break
+                row = list(map(int, lines[current_line].strip().split()))
+                data.rotation.append(row)
+                current_line += 1
             
             # 读取可用道路数量
             if current_line < len(lines):
