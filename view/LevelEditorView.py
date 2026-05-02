@@ -5,7 +5,7 @@ from models.roadlist import NormalRoadListModel
 from view.map_view import MapView
 from view.button_view import ButtonView
 from view.dialog_view import DialogView
-from models.gamemodel import GameLevelModel, GameLevelController
+from models.gamemodel import GameLevelModel
 from models.Road import RoadType
 from models.roadcell import RoadCellModel
 from models.map import MapModel
