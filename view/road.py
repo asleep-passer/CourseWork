@@ -34,9 +34,9 @@ class RoadView:
         elif road.road_type == rt.CROSS_ROAD:
             img = pg.image.load(os.path.join(base_path, "view/assets/Legacy/PNG/roadTile5.png"))
         elif road.road_type == rt.START_ROAD:
-            img = pg.image.load(os.path.join(base_path, "view/assets/Legacy/PNG/roadTile27.png"))
+            img = pg.image.load(os.path.join(base_path, "view/assets/Legacy/PNG/roadTile18.png"))
         elif road.road_type == rt.END_ROAD:
-            img = pg.image.load(os.path.join(base_path, "view/assets/Legacy/PNG/roadTile27.png"))
+            img = pg.image.load(os.path.join(base_path, "view/assets/Legacy/PNG/roadTile18.png"))
         else:
             img = pg.image.load(os.path.join(base_path, "view/assets/Legacy/PNG/roadTile18.png"))
 

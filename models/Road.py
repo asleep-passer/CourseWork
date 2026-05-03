@@ -29,11 +29,11 @@ class RoadModel:
             RoadType.BEND_ROAD: (Direction.UP, Direction.RIGHT),
             RoadType.T_SHAPED_ROAD: (Direction.UP, Direction.RIGHT, Direction.LEFT),
             RoadType.CROSS_ROAD: (Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT),
-            RoadType.START_ROAD: (Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT),
-            RoadType.END_ROAD: (Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT),
+            RoadType.START_ROAD: (Direction.UP,),
+            RoadType.END_ROAD: (Direction.UP,)
         }
 
-        self._passable = base.get(road_type, (Direction.UP,))
+        self._passable = base[road_type]
 
     def get_passable_direction(self):
         return tuple(
