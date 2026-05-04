@@ -160,18 +160,31 @@ class LevelEditorView:
 
         btn_w = 130
         btn_h = 50
-        self.back_btn = ButtonView(20, 20, btn_w, btn_h, "Back")
-        self.reset_btn = ButtonView(160, 20, btn_w, btn_h, "Reset")
-        self.save_btn = ButtonView(300, 20, btn_w, btn_h, "Save")
-        self.clear_btn = ButtonView(440, 20, btn_w, btn_h, "Clear")
-        self.remove_btn = ButtonView(580, 20, btn_w + 20, btn_h, "Remove")
+        self.back_btn = ButtonView(20, 20, btn_w, btn_h, "Back",
+                                   normal_color=(120, 120, 120),
+                                   hover_color=(160, 160, 160))
+        self.reset_btn = ButtonView(160, 20, btn_w, btn_h, "Reset",
+                                    normal_color=(255, 140, 0),
+                                    hover_color=(255, 165, 40))
+        self.save_btn = ButtonView(300, 20, btn_w, btn_h, "Save",
+                                   normal_color=(80, 180, 80),
+                                   hover_color=(110, 210, 110))
+        self.clear_btn = ButtonView(440, 20, btn_w, btn_h, "Clear",
+                                    normal_color=(200, 180, 50),
+                                    hover_color=(230, 210, 80))
+        self.remove_btn = ButtonView(580, 20, btn_w + 20, btn_h, "Remove",
+                                     normal_color=(200, 70, 70),
+                                     hover_color=(230, 100, 100))
 
         self.selected_cell: Optional[Tuple[int, int]] = None
         self.selected_road_type: Optional[RoadType] = None
 
         self.info_dialog = DialogView(250, 200, 350, 150)
         self.info_dialog.add_button(
-            ButtonView(400, 290, 80, 35, "OK", callback=self.info_dialog.hide)
+            ButtonView(400, 290, 80, 35, "OK",
+                       normal_color=(70, 130, 200),
+                       hover_color=(100, 160, 230),
+                       callback=self.info_dialog.hide)
         )
 
         self.edit_level_id = None

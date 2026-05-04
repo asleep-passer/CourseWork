@@ -13,9 +13,16 @@ class DifficultySelectView:
         self.h = h
         self.buttons = []
         cx = w // 2 - 90
-        self.buttons.append(ButtonView(cx, 180, 180, 50, "Easy"))
-        self.buttons.append(ButtonView(cx, 250, 180, 50, "Medium"))
-        self.buttons.append(ButtonView(cx, 320, 180, 50, "Hard"))
+
+        self.buttons.append(ButtonView(cx, 180, 180, 50, "Easy",
+                                       normal_color=(100, 200, 100),
+                                       hover_color=(130, 230, 130)))
+        self.buttons.append(ButtonView(cx, 250, 180, 50, "Medium",
+                                       normal_color=(255, 165, 0),
+                                       hover_color=(255, 190, 60)))
+        self.buttons.append(ButtonView(cx, 320, 180, 50, "Hard",
+                                       normal_color=(220, 80, 80),
+                                       hover_color=(250, 120, 120)))
         self.buttons.append(ButtonView(w//2 - 60, 400, 120, 50, "Back"))
 
         self.background = None
@@ -33,7 +40,7 @@ class DifficultySelectView:
             screen.blit(self.background, (0, 0))
         else:
             screen.fill(BG)
-        title = FONT_TITLE.render("Select Difficulty", True, (20,40,80))
+        title = FONT_TITLE.render("Select Difficulty", True, (20, 40, 80))
         screen.blit(title, title.get_rect(center=(self.w//2, 100)))
         for btn in self.buttons:
             btn.draw(screen)

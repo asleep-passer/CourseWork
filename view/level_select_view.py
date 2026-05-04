@@ -8,8 +8,8 @@ FONT_TITLE = pygame.font.Font(None, 40)
 FONT_SUBTITLE = pygame.font.Font(None, 28)
 FONT_BUTTON = pygame.font.Font(None, 24)
 BG = (235, 245, 255)
-BUILTIN_BG = (220, 235, 250)
-CUSTOM_BG = (240, 240, 240)
+BUILTIN_BG = (255, 255, 180)
+CUSTOM_BG = (230, 210, 250)
 BORDER_COLOR = (80, 80, 80)
 
 class LevelSelectView:
@@ -18,7 +18,9 @@ class LevelSelectView:
         self.h = h
         self.saves_path = saves_path
 
-        self.back_button = ButtonView(w//2 - 60, h - 80, 120, 50, "Back")
+        self.back_button = ButtonView(w//2 - 60, h - 80, 120, 50, "Back",
+                                      normal_color=(120, 120, 120),
+                                      hover_color=(160, 160, 160))
 
         self.builtin_buttons = []
         btn_w, btn_h = 150, 50
@@ -29,11 +31,14 @@ class LevelSelectView:
             col = i % 2
             x = margin_x + col * (btn_w + margin_x)
             y = start_y + row * (btn_h + 15)
-            btn = ButtonView(x, y, btn_w, btn_h, f"Level {i+1}")
+            btn = ButtonView(x, y, btn_w, btn_h, f"Level {i+1}",
+                             normal_color=(70, 130, 200),
+                             hover_color=(100, 160, 230))
             self.builtin_buttons.append(btn)
 
         self.custom_groups = []
         self._load_custom_levels()
+
         self.background = None
         try:
             path = os.path.join("view", "assets", "backgrounds", "level_select.jpg")
@@ -70,9 +75,15 @@ class LevelSelectView:
         for i, num in enumerate(nums):
             x = start_x
             y = start_y + i * row_h
-            play_btn = ButtonView(x, y, small_btn_w, small_btn_h, f"Play {num}")
-            edit_btn = ButtonView(x + small_btn_w + spacing, y, small_btn_w, small_btn_h, "Edit")
-            del_btn = ButtonView(x + 2*(small_btn_w + spacing), y, small_btn_w, small_btn_h, "Del")
+            play_btn = ButtonView(x, y, small_btn_w, small_btn_h, f"Play {num}",
+                                  normal_color=(80, 180, 80),
+                                  hover_color=(110, 210, 110))
+            edit_btn = ButtonView(x + small_btn_w + spacing, y, small_btn_w, small_btn_h, "Edit",
+                                  normal_color=(255, 140, 0),
+                                  hover_color=(255, 165, 40))
+            del_btn = ButtonView(x + 2*(small_btn_w + spacing), y, small_btn_w, small_btn_h, "Del",
+                                 normal_color=(200, 70, 70),
+                                 hover_color=(230, 100, 100))
             self.custom_groups.append((play_btn, edit_btn, del_btn, num))
 
     def draw(self, screen):

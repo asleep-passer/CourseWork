@@ -27,12 +27,24 @@ class GameLevelView:
         self.inventory = InventoryView(map_x + 4*120 + 40, map_y + 10, screen)
         self.inventory.update_from_model(level_model.player_road_list)
 
-        self.back_btn = ButtonView(20, 20, 90, 40, "Back")
-        self.reset_btn = ButtonView(130, 20, 90, 40, "Reset")
-        self.rotate_btn = ButtonView(240, 20, 90, 40, "Rotate")
-        self.remove_btn = ButtonView(350, 20, 90, 40, "Remove")
-        self.clear_btn = ButtonView(460, 20, 110, 40, "Clear Sel")
-        self.hint_btn = ButtonView(580, 20, 90, 40, "Hint")
+        self.back_btn = ButtonView(20, 20, 90, 40, "Back",
+                                   normal_color=(120, 120, 120),
+                                   hover_color=(160, 160, 160))
+        self.reset_btn = ButtonView(130, 20, 90, 40, "Reset",
+                                    normal_color=(255, 140, 0),
+                                    hover_color=(255, 165, 40))
+        self.rotate_btn = ButtonView(240, 20, 90, 40, "Rotate",
+                                     normal_color=(70, 130, 200),
+                                     hover_color=(100, 160, 230))
+        self.remove_btn = ButtonView(350, 20, 90, 40, "Remove",
+                                     normal_color=(200, 70, 70),
+                                     hover_color=(230, 100, 100))
+        self.clear_btn = ButtonView(460, 20, 110, 40, "Clear Sel",
+                                    normal_color=(200, 180, 50),
+                                    hover_color=(230, 210, 80))
+        self.hint_btn = ButtonView(580, 20, 90, 40, "Hint",
+                                   normal_color=(80, 180, 80),
+                                   hover_color=(110, 210, 110))
 
         self.selected_cell: Optional[Tuple[int, int]] = None
         self.selected_road_type: Optional[RoadType] = None

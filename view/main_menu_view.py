@@ -14,9 +14,15 @@ class MainMenuView:
         self.buttons = []
 
         center_x = w // 2 - 100
-        self.buttons.append(ButtonView(center_x, 250, 200, 50, "Start Game"))
-        self.buttons.append(ButtonView(center_x, 320, 200, 50, "Level Editor"))
-        self.buttons.append(ButtonView(center_x, 390, 200, 50, "Quit"))
+        self.buttons.append(ButtonView(center_x, 250, 200, 50, "Start Game",
+                                       normal_color=(100, 200, 100),
+                                       hover_color=(130, 230, 130)))
+        self.buttons.append(ButtonView(center_x, 320, 200, 50, "Level Editor",
+                                       normal_color=(100, 150, 220),
+                                       hover_color=(130, 180, 250)))
+        self.buttons.append(ButtonView(center_x, 390, 200, 50, "Quit",
+                                       normal_color=(220, 80, 80),
+                                       hover_color=(250, 120, 120)))
 
         self.background = None
         try:

@@ -6,12 +6,15 @@ FONT_MEDIUM = pygame.font.Font(None, 26)
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
-BUTTON_NORMAL = (60, 120, 200)
-BUTTON_HOVER = (90, 150, 230)
+
+DEFAULT_NORMAL = (60, 120, 200)
+DEFAULT_HOVER = (90, 150, 230)
+
 
 class ButtonView:
     """
     Universal clickable button with hover effect and click callback.
+    Supports individual normal and hover colors for each button.
     """
     def __init__(self,
                  x: int,
@@ -19,15 +22,19 @@ class ButtonView:
                  width: int,
                  height: int,
                  text: str,
-                 callback: Optional[Callable[[], None]] = None) -> None:
+                 callback: Optional[Callable[[], None]] = None,
+                 normal_color: Optional[Tuple[int, int, int]] = None,
+                 hover_color: Optional[Tuple[int, int, int]] = None) -> None:
         self.rect = pygame.Rect(x, y, width, height)
         self.text = text
         self.callback = callback
+        self.normal_color = normal_color if normal_color is not None else DEFAULT_NORMAL
+        self.hover_color = hover_color if hover_color is not None else DEFAULT_HOVER
 
     def draw(self, screen: pygame.Surface) -> None:
         """Draw button with normal or hover color."""
         mouse_pos = pygame.mouse.get_pos()
-        color = BUTTON_HOVER if self.rect.collidepoint(mouse_pos) else BUTTON_NORMAL
+        color = self.hover_color if self.rect.collidepoint(mouse_pos) else self.normal_color
 
         pygame.draw.rect(screen, color, self.rect, border_radius=6)
         pygame.draw.rect(screen, BLACK, self.rect, 2, border_radius=6)
