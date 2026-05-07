@@ -21,7 +21,6 @@ class RoadView:
         self.__rotation_start_time = 0
         self.__rotation_center = pos.center
 
-
         base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         if road.road_type == rt.OBSTACLE_ROAD:
             img = pg.image.load(os.path.join(base_path, "view/assets/Legacy/PNG/terrainTile3.png"))
@@ -49,6 +48,11 @@ class RoadView:
         self.__img = self.__original_img.copy()
         self.__pos = self.__img.get_rect(center=self.__rotation_center)
 
+        # 根据模型当前旋转次数，同步视觉旋转角度（让起点等默认就显示正确的方向）
+        if self.road._rotated != 0:
+            self.__rotation_current_angle = self.__normalize_angle(90 * self.road._rotated)
+            self.__update_rotated_image()
+
     def set_position(self, pos: pg.Rect):
         self.__pos = pos.copy()
         self.__rotation_center = pos.center
@@ -58,10 +62,8 @@ class RoadView:
     def __normalize_angle(self, angle: float):
         return angle % 360
 
-    def rotated(self,fix:int=0, duration: int = 500):
+    def rotated(self, duration: int = 500):
         self.road.rotate()
-        for _ in range(fix):
-            self.road.rotate()
         if self.__is_rotating:
             return
         self.__is_rotating = True

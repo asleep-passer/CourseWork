@@ -6,6 +6,7 @@ from view.dialog_view import DialogView
 from view.inventory_view import InventoryView
 from view.car_view import CarView
 from view.passmenu import PassMenuView
+from view.victory import VictoryEffect
 from models.gamemodel import GameLevelModel
 from models.Road import RoadType
 from models.roadcell import RoadCellModel
@@ -60,6 +61,8 @@ class GameLevelView:
 
         self.pass_menu = None
         self._pass_menu_ready = False
+        self.victory_effect = None
+        self._victory_effect_started = False
 
         self.car_view = None
         self.showing_win = False
@@ -132,9 +135,9 @@ class GameLevelView:
             self.model.check_completion()
             self.showing_win = True
             if path:
-                print("✅ Car started, path length:", len(path))
                 self.car_view.start_move(path)
                 self._pass_menu_ready = False
+                self._victory_effect_started = False
             else:
                 print("⚠️ Connected but path is empty! (Error)")
         else:
@@ -307,6 +310,8 @@ class GameLevelView:
         self.showing_win = False
         self.pass_menu = None
         self._pass_menu_ready = False
+        self.victory_effect = None
+        self._victory_effect_started = False
         self.hint_cells = []
         self.hint_timer = 0
 
@@ -333,8 +338,24 @@ class GameLevelView:
                 self.hint_cells = []
 
         if self.showing_win and self.car_view.finished and not self._pass_menu_ready:
-            self.show_pass_menu()
-            self._pass_menu_ready = True
+            if not self._victory_effect_started:
+                if self.car_view.path:
+                    end_grid = self.car_view.path[-1]
+                    end_x = self.map_view.x + end_grid[1] * 120 + 60
+                    end_y = self.map_view.y + end_grid[0] * 120 + 60
+                else:
+                    end_x = self.screen.get_width() // 2
+                    end_y = self.screen.get_height() // 2
+                self.victory_effect = VictoryEffect(self.screen, end_x, end_y)
+                self._victory_effect_started = True
+            elif self.victory_effect is None:
+                self.show_pass_menu()
+                self._pass_menu_ready = True
+
+        if self.victory_effect:
+            self.victory_effect.update()
+            if self.victory_effect.finished:
+                self.victory_effect = None
 
     def draw(self):
         if self.background:
@@ -368,7 +389,7 @@ class GameLevelView:
         if self.selected_cell is not None:
             r, c = self.selected_cell
             rect = pg.Rect(self.map_view.x + c*120, self.map_view.y + r*120, 120, 120)
-            pg.draw.rect(self.screen, (0, 0, 255), rect, 3)
+            pg.draw.rect(self.screen, (255, 255, 0), rect, 3)
 
         if self.is_dragging and self.drag_preview_road is not None:
             preview_rect = pg.Rect(self.drag_mouse_pos[0]-60, self.drag_mouse_pos[1]-60, 120, 120)
@@ -379,6 +400,9 @@ class GameLevelView:
             self.screen.blit(temp, preview_rect)
 
         self.car_view.draw(self.screen)
+
+        if self.victory_effect:
+            self.victory_effect.draw()
 
         if self.pass_menu is not None and self.pass_menu.visible:
             self.pass_menu.draw()

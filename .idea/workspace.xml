@@ -5,7 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c3f1b254-67c0-409e-ad1a-253edcea8396" name="更改" comment="">
+      <change afterPath="$PROJECT_DIR$/view/victory.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/gamemodel.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/gamemodel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/levels/level5.txt" beforeDir="false" afterPath="$PROJECT_DIR$/models/levels/level5.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/levels/level6.txt" beforeDir="false" afterPath="$PROJECT_DIR$/models/levels/level6.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/levels/level7.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/levels/level8.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/view/LevelEditorView.py" beforeDir="false" afterPath="$PROJECT_DIR$/view/LevelEditorView.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/view/assets/Legacy/PNG/roadTile27.png" beforeDir="false" afterPath="$PROJECT_DIR$/view/assets/Legacy/PNG/roadTile27.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/view/game_level_view.py" beforeDir="false" afterPath="$PROJECT_DIR$/view/game_level_view.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/view/passmenu.py" beforeDir="false" afterPath="$PROJECT_DIR$/view/passmenu.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/view/road.py" beforeDir="false" afterPath="$PROJECT_DIR$/view/road.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/view/road_cell_view.py" beforeDir="false" afterPath="$PROJECT_DIR$/view/road_cell_view.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,41 +42,47 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Python.LevelEditorView.executor": "Run",
-    "Python.Road.executor": "Run",
-    "Python.car_view.executor": "Run",
-    "Python.check.executor": "Run",
-    "Python.game_level_view.executor": "Run",
-    "Python.gamemodel.executor": "Run",
-    "Python.inventory_view.executor": "Run",
-    "Python.level_select_view.executor": "Run",
-    "Python.main.executor": "Run",
-    "Python.main_menu_view.executor": "Run",
-    "Python.map.executor": "Run",
-    "Python.passmenu.executor": "Run",
-    "Python.prim迷宫生成.executor": "Run",
-    "Python.road.executor": "Run",
-    "Python.testbutton.executor": "Run",
-    "Python.testdialog.executor": "Run",
-    "Python.testgame.executor": "Run",
-    "Python.testlevel.executor": "Run",
-    "Python.testmenu.executor": "Run",
-    "Python.testroad.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "main",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Python.LevelEditorView.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Road.executor&quot;: &quot;Run&quot;,
+    &quot;Python.car_view.executor&quot;: &quot;Run&quot;,
+    &quot;Python.check.executor&quot;: &quot;Run&quot;,
+    &quot;Python.game_level_view.executor&quot;: &quot;Run&quot;,
+    &quot;Python.gamemodel.executor&quot;: &quot;Run&quot;,
+    &quot;Python.inventory_view.executor&quot;: &quot;Run&quot;,
+    &quot;Python.level_select_view.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main_menu_view.executor&quot;: &quot;Run&quot;,
+    &quot;Python.map.executor&quot;: &quot;Run&quot;,
+    &quot;Python.passmenu.executor&quot;: &quot;Run&quot;,
+    &quot;Python.prim迷宫生成.executor&quot;: &quot;Run&quot;,
+    &quot;Python.road.executor&quot;: &quot;Run&quot;,
+    &quot;Python.testbutton.executor&quot;: &quot;Run&quot;,
+    &quot;Python.testdialog.executor&quot;: &quot;Run&quot;,
+    &quot;Python.testgame.executor&quot;: &quot;Run&quot;,
+    &quot;Python.testlevel.executor&quot;: &quot;Run&quot;,
+    &quot;Python.testmenu.executor&quot;: &quot;Run&quot;,
+    &quot;Python.testroad.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/26647/Desktop/CourseWork/view/assets/Legacy/PNG&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\26647\Desktop\CourseWork\view\assets\Legacy\PNG" />
+    </key>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -85,6 +103,10 @@
       <workItem from="1777688516509" duration="14962000" />
       <workItem from="1777899925990" duration="1668000" />
       <workItem from="1777902065515" duration="1368000" />
+      <workItem from="1777985760354" duration="3099000" />
+      <workItem from="1778067856739" duration="4300000" />
+      <workItem from="1778154216980" duration="9950000" />
+      <workItem from="1778168883808" duration="409000" />
     </task>
     <servers />
   </component>
@@ -108,7 +130,7 @@
     <SUITE FILE_PATH="coverage/CourseWork$road.coverage" NAME="road 覆盖结果" MODIFIED="1777619924876" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/view" />
     <SUITE FILE_PATH="coverage/CourseWork$Road.coverage" NAME="Road 覆盖结果" MODIFIED="1777642492687" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/models" />
     <SUITE FILE_PATH="coverage/CourseWork$testlevel.coverage" NAME="testlevel 覆盖结果" MODIFIED="1777617152024" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
-    <SUITE FILE_PATH="coverage/CourseWork$car_view.coverage" NAME="car_view 覆盖结果" MODIFIED="1777632432225" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/view" />
+    <SUITE FILE_PATH="coverage/CourseWork$car_view.coverage" NAME="car_view 覆盖结果" MODIFIED="1778165807141" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/view" />
     <SUITE FILE_PATH="coverage/CourseWork$inventory_view.coverage" NAME="inventory_view 覆盖结果" MODIFIED="1777622633851" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/view" />
     <SUITE FILE_PATH="coverage/CourseWork$check.coverage" NAME="check 覆盖结果" MODIFIED="1777702318534" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/CourseWork$game_level_view.coverage" NAME="game_level_view 覆盖结果" MODIFIED="1777900592021" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/view" />
@@ -121,7 +143,7 @@
     <SUITE FILE_PATH="coverage/CourseWork$testbutton.coverage" NAME="testbutton 覆盖结果" MODIFIED="1777630480511" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/CourseWork$prim.coverage" NAME="prim迷宫生成 覆盖结果" MODIFIED="1777636520998" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/.." />
     <SUITE FILE_PATH="coverage/CourseWork$level_select_view.coverage" NAME="level_select_view 覆盖结果" MODIFIED="1777902810284" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/view" />
-    <SUITE FILE_PATH="coverage/CourseWork$main.coverage" NAME="main 覆盖结果" MODIFIED="1777903380828" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/CourseWork$main.coverage" NAME="main 覆盖结果" MODIFIED="1778165809894" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/CourseWork$testgame.coverage" NAME="testgame 覆盖结果" MODIFIED="1777623608818" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
   </component>
 </project>

@@ -134,9 +134,22 @@ class GameLevelModel:
             if len(lines) < 2:
                 raise ValueError("Invalid level file format")
 
+            # 读取类型网格 (第1-4行，索引1-4)
             type_grid = []
             for i in range(4):
                 type_grid.append(list(map(int, lines[1 + i].split())))
+
+            # 锁定状态 (第5-8行，索引5-8) 在文件中处于旋转网格之前，我们不使用它，但要跳过以准确读取后面的数据
+            # 旋转网格 (第9-12行，索引9-12)
+            rotation_grid = []
+            for i in range(4):
+                idx = 9 + i
+                if idx < len(lines):
+                    rotation_grid.append(list(map(int, lines[idx].split())))
+                else:
+                    rotation_grid.append([0, 0, 0, 0])
+
+            # 最后一行是道路数量
             last_line = lines[-1] if lines else "10 6 3 1"
             raw_counts = list(map(int, last_line.split()))
             while len(raw_counts) < 4:
@@ -163,6 +176,9 @@ class GameLevelModel:
                 elif t == 0:
                     cell = RoadCellModel(r, c, RoadType.OBSTACLE_ROAD)
                 if cell:
+                    # 应用保存的旋转次数
+                    for _ in range(rotation_grid[r][c]):
+                        cell.rotate()
                     self.map.set_cell(r, c, cell)
 
         self.player_road_list = NormalRoadListModel(*road_counts)
@@ -194,9 +210,21 @@ class GameLevelModel:
             if len(lines) < 2:
                 raise ValueError("Invalid level file format")
 
+            # 读取类型网格
             type_grid = []
             for i in range(4):
                 type_grid.append(list(map(int, lines[1 + i].split())))
+
+            # 跳过锁定状态，读取旋转网格
+            rotation_grid = []
+            for i in range(4):
+                idx = 9 + i
+                if idx < len(lines):
+                    rotation_grid.append(list(map(int, lines[idx].split())))
+                else:
+                    rotation_grid.append([0, 0, 0, 0])
+
+            # 最后一行是道路数量
             last_line = lines[-1] if lines else "10 6 3 1"
             raw_counts = list(map(int, last_line.split()))
             while len(raw_counts) < 4:
@@ -224,6 +252,9 @@ class GameLevelModel:
                 elif t == 0:
                     cell = RoadCellModel(r, c, RoadType.OBSTACLE_ROAD)
                 if cell:
+                    # 应用保存的旋转次数
+                    for _ in range(rotation_grid[r][c]):
+                        cell.rotate()
                     model.map.set_cell(r, c, cell)
 
         return model

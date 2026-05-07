@@ -223,6 +223,14 @@ class LevelEditorView:
                 for i in range(4):
                     type_map.append(list(map(int, lines[1 + i].split())))
 
+                # 读取旋转状态（第6~9行，索引5~8）
+                rotation_grid = []
+                for i in range(4):
+                    if len(lines) > 5 + i:
+                        rotation_grid.append(list(map(int, lines[5 + i].split())))
+                    else:
+                        rotation_grid.append([0, 0, 0, 0])
+
                 last_line = lines[-1] if lines else ""
                 counts = list(map(int, last_line.split()))
 
@@ -239,6 +247,9 @@ class LevelEditorView:
                     elif cell_type_num == 0:
                         cell = RoadCellModel(r, c, RoadType.OBSTACLE_ROAD)
                     if cell:
+                        # 应用保存的旋转次数
+                        for _ in range(rotation_grid[r][c]):
+                            cell.rotate()
                         self.model.map.set_cell(r, c, cell)
 
             self.model.player_road_list = NormalRoadListModel(*counts)
@@ -246,7 +257,6 @@ class LevelEditorView:
                 self.inventory.counts[rt] = str(self.model.player_road_list.get_road_num(rt))
 
             self.edit_level_id = level_id
-
             self.clear_selection()
 
         except Exception as e:
@@ -301,11 +311,22 @@ class LevelEditorView:
                     road_types.append(" ".join(row))
                 f.write("\n".join(road_types) + "\n")
 
+                # 锁定状态仍全0（编辑器目前不支持修改锁定）
                 locked_status = ["0 0 0 0"] * 4
                 f.write("\n".join(locked_status) + "\n")
 
-                rotation_status = ["0 0 0 0"] * 4
-                f.write("\n".join(rotation_status) + "\n")
+                # 记录每个格子的实际旋转次数
+                rotation_rows = []
+                for r in range(4):
+                    row = []
+                    for c in range(4):
+                        cell = self.model.map.get_cell(r, c)
+                        if cell and cell.road_model:
+                            row.append(str(cell.road_model._rotated % 4))
+                        else:
+                            row.append("0")
+                    rotation_rows.append(" ".join(row))
+                f.write("\n".join(rotation_rows) + "\n")
 
                 straight = self.model.player_road_list.get_road_num(RoadType.STRAIGHT_ROAD)
                 bend = self.model.player_road_list.get_road_num(RoadType.BEND_ROAD)
@@ -364,6 +385,9 @@ class LevelEditorView:
                     if self.selected_road_type is not None:
                         if self.selected_road_type in [RoadType.START_ROAD, RoadType.END_ROAD, RoadType.OBSTACLE_ROAD]:
                             new_cell = RoadCellModel(r, c, self.selected_road_type)
+                            # ★ 起点默认向右旋转90°
+                            if self.selected_road_type == RoadType.START_ROAD:
+                                new_cell.rotate()
                             self.model.map.set_cell(r, c, new_cell)
                     return None
 
