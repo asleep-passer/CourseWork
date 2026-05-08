@@ -84,6 +84,9 @@ class GameLevelView:
 
         self.background = self._load_background()
 
+        # ---------- 新增：播放关卡背景音乐 ----------
+        self._play_level_music()
+
     def _load_background(self):
         level = self.model.level_id
         difficulty = self.model.difficulty.name
@@ -99,6 +102,42 @@ class GameLevelView:
             return pg.transform.scale(img, self.screen.get_size())
         except Exception:
             return None
+
+    # ---------- 新增：关卡音乐控制 ----------
+    def _play_level_music(self):
+        """根据关卡 ID 播放对应的背景音乐（循环）"""
+        level_id = self.model.level_id
+        # 音乐文件映射
+        music_map = {
+            1: "level1_forest.mp3",
+            2: "level2_countryside.mp3",
+            3: "level3_beach.mp3",
+            4: "level4_snow.mp3",
+        }
+        if level_id in music_map:
+            filename = music_map[level_id]
+        else:
+            # 自定义关卡可选默认音乐（若不需要可注释，则无音乐）
+            filename = "custom_level.mp3"   # 可根据需要准备一个默认音乐
+        music_path = os.path.join("view", "assets", "Sounds", filename)
+        try:
+            if pg.mixer.get_init():
+                pg.mixer.music.stop()
+                pg.mixer.music.load(music_path)
+                pg.mixer.music.play(-1)   # 循环播放
+                # 可选：设置音量
+                pg.mixer.music.set_volume(0.5)
+        except Exception as e:
+            print(f"[GameLevelView] Failed to play music for level {level_id}: {e}")
+
+    def stop_music(self):
+        """停止当前关卡背景音乐（供外部在离开关卡时调用）"""
+        try:
+            if pg.mixer.get_init():
+                pg.mixer.music.stop()
+        except Exception:
+            pass
+    # --------------------------------------------
 
     def show_info(self, msg: str):
         self.info_dialog.set_message(msg)
@@ -327,6 +366,8 @@ class GameLevelView:
         self.car_view = CarView(120, (self.map_view.x, self.map_view.y),
                                 start_grid=start_cell)
         self.background = self._load_background()
+
+        # 注意：重置关卡不重新播放音乐，保持当前背景音乐继续
 
     def update(self):
         self.model.update_time()

@@ -7,6 +7,7 @@ from view.level_select_view import LevelSelectView
 from view.difficulty_select_view import DifficultySelectView
 from view.game_level_view import GameLevelView
 from view.LevelEditorView import LevelEditorView
+from view.story_intro_view import StoryIntroView
 import config
 
 STATE_MAIN_MENU = 0
@@ -14,29 +15,59 @@ STATE_LEVEL_SELECT = 1
 STATE_DIFFICULTY = 2
 STATE_GAME = 3
 STATE_EDITOR = 4
+STATE_STORY = 5
 
 def main():
     pygame.init()
-    screen = pygame.display.set_mode((800, 650))
+    try:
+        pygame.mixer.init()
+        pygame.mixer.music.set_volume(0.4)
+    except Exception as e:
+        print(f"[main] Audio initialization failed: {e}")
+
+    screen = pygame.display.set_mode((1000, 650))
     pygame.display.set_caption("Road Builder")
     clock = pygame.time.Clock()
 
     state = STATE_MAIN_MENU
     pending_level_id = 1
 
-    main_menu_view = MainMenuView(800, 650)
-    level_select_view = LevelSelectView(800, 650, saves_path=config.saves_path)
-    difficulty_select_view = DifficultySelectView(800, 650)
+    main_menu_view = MainMenuView(1000, 650)
+    story_view = StoryIntroView(1000, 650)
+    level_select_view = LevelSelectView(1000, 650, saves_path=config.saves_path)
+    difficulty_select_view = DifficultySelectView(1000, 650)
     game_view = None
     game_model = None
     editor_view = None
+
+    main_music_playing = False
 
     running = True
     while running:
         clock.tick(60)
 
+        if state == STATE_MAIN_MENU and not main_music_playing:
+            if pygame.mixer.get_init():
+                try:
+                    pygame.mixer.music.stop()
+                    pygame.mixer.music.load("view/assets/Sounds/main_menu.mp3")
+                    pygame.mixer.music.play(-1)
+                    main_music_playing = True
+                except Exception as e:
+                    print(f"[main] Failed to play main menu music: {e}")
+        elif state != STATE_MAIN_MENU and main_music_playing:
+            if pygame.mixer.get_init():
+                try:
+                    pygame.mixer.music.stop()
+                    main_music_playing = False
+                except Exception as e:
+                    print(f"[main] Failed to stop main menu music: {e}")
+
         if state == STATE_MAIN_MENU:
             main_menu_view.draw(screen)
+        elif state == STATE_STORY:
+            story_view.update()
+            story_view.draw(screen)
         elif state == STATE_LEVEL_SELECT:
             level_select_view.draw(screen)
         elif state == STATE_DIFFICULTY:
@@ -60,12 +91,18 @@ def main():
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     result = main_menu_view.handle_click(event.pos)
                     if result == "Start Game":
-                        state = STATE_LEVEL_SELECT
+                        state = STATE_STORY
+                        story_view.reset()
                     elif result == "Level Editor":
                         editor_view = LevelEditorView(screen)
                         state = STATE_EDITOR
                     elif result == "Quit":
                         running = False
+
+            elif state == STATE_STORY:
+                result = story_view.handle_event(event)
+                if result == "done":
+                    state = STATE_LEVEL_SELECT
 
             elif state == STATE_LEVEL_SELECT:
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
@@ -121,9 +158,12 @@ def main():
                 if game_view is not None:
                     action = game_view.handle_event(event)
                     if action == "back":
+
+                        game_view.stop_music()
                         state = STATE_LEVEL_SELECT
                         game_view = None
                     elif action == "next_level":
+                        game_view.stop_music()
                         next_id = pending_level_id + 1
                         if next_id <= 4:
                             pending_level_id = next_id
@@ -137,9 +177,14 @@ def main():
                                 game_view = GameLevelView(screen, game_model)
                             else:
                                 print("All levels complete!")
+
+                                game_view.stop_music()
+                                game_view = None
                                 state = STATE_MAIN_MENU
                     elif action == "back_to_select":
+                        game_view.stop_music()
                         state = STATE_LEVEL_SELECT
+                        game_view = None
 
             elif state == STATE_EDITOR:
                 if editor_view is not None:

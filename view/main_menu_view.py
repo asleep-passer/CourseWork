@@ -40,8 +40,8 @@ class MainMenuView:
         else:
             screen.fill(BACKGROUND_COLOR)
 
-        title = FONT_TITLE.render("Road Builder", True, (20, 40, 80))
-        screen.blit(title, title.get_rect(center=(self.w // 2, 120)))
+        #title = FONT_TITLE.render("Road Builder", True, (20, 40, 80))
+        #screen.blit(title, title.get_rect(center=(self.w // 2, 120)))
 
         for btn in self.buttons:
             btn.draw(screen)
