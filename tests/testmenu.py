@@ -7,10 +7,9 @@ from view.main_menu_view import MainMenuView
 from view.level_select_view import LevelSelectView
 from view.difficulty_select_view import DifficultySelectView
 
-# Initialize Pygame
+
 pygame.init()
 
-# Initial window size
 W, H = 800, 600
 screen = pygame.display.set_mode((W, H), pygame.RESIZABLE)
 pygame.display.set_caption("Road Builder")
@@ -20,15 +19,12 @@ main_menu = MainMenuView(W, H)
 level_select = LevelSelectView(W, H)
 diff_select = DifficultySelectView(W, H)
 
-# UI state management
 current_state = "menu"
 
-# Main loop
 running = True
 while running:
     screen.fill((235, 245, 255))
 
-    # Render current screen
     if current_state == "menu":
         main_menu.draw(screen)
     elif current_state == "level":
@@ -36,17 +32,14 @@ while running:
     elif current_state == "difficulty":
         diff_select.draw(screen)
 
-    # Event processing
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
-        # Handle window resizing (maximize)
         if event.type == pygame.VIDEORESIZE:
             W, H = event.w, event.h
             screen = pygame.display.set_mode((W, H), pygame.RESIZABLE)
 
-        # Handle mouse clicks
         if event.type == pygame.MOUSEBUTTONDOWN:
             pos = event.pos
 

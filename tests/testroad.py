@@ -33,7 +33,6 @@ def test2():
         WHITE = (255, 255, 255)
         screen.fill(WHITE)
 
-        # screen.blit(Surface_to_draw, destination_Rect_or_Coordinates)
         road_view.draw()
 
         pg.display.flip()

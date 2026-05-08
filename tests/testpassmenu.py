@@ -24,7 +24,6 @@ def test3():
         WHITE = (255, 255, 255)
         screen.fill(WHITE)
 
-    # screen.blit(Surface_to_draw, destination_Rect_or_Coordinates)
         pass_menu.draw()
 
         pg.display.flip()

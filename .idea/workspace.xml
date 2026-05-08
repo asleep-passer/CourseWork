@@ -5,8 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c3f1b254-67c0-409e-ad1a-253edcea8396" name="更改" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/CourseWork.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/CourseWork.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/tests/testmenu.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/testmenu.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/tests/testpassmenu.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/testpassmenu.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/tests/testroad.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/testroad.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -98,6 +99,7 @@
       <workItem from="1778168883808" duration="3634000" />
       <workItem from="1778252151532" duration="29000" />
       <workItem from="1778252203225" duration="156000" />
+      <workItem from="1778252622764" duration="533000" />
     </task>
     <servers />
   </component>
@@ -134,7 +136,7 @@
     <SUITE FILE_PATH="coverage/CourseWork$testbutton.coverage" NAME="testbutton 覆盖结果" MODIFIED="1777630480511" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/CourseWork$prim.coverage" NAME="prim迷宫生成 覆盖结果" MODIFIED="1777636520998" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/.." />
     <SUITE FILE_PATH="coverage/CourseWork$level_select_view.coverage" NAME="level_select_view 覆盖结果" MODIFIED="1777902810284" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/view" />
-    <SUITE FILE_PATH="coverage/CourseWork$main.coverage" NAME="main 覆盖结果" MODIFIED="1778252211979" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/CourseWork$main.coverage" NAME="main 覆盖结果" MODIFIED="1778252628316" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/CourseWork$testgame.coverage" NAME="testgame 覆盖结果" MODIFIED="1777623608818" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
   </component>
 </project>
