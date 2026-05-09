@@ -1,14 +1,6 @@
-<<<<<<< HEAD
 """
-Application controller and state management.
+User interface and rendering components.
 
-This package contains the main event loop, state machine,
-and modules that coordinate between model and view layers.
+This package contains the main game screen, map view, car animation,
+buttons, dialogs, inventory panel, level editor, and pass menu.
 """
-=======
-"""Control package: controllers related to game levels and road management.
-
-This package exports controller classes for use by other modules.
-"""
-
->>>>>>> 029571c (control和models的注释)
