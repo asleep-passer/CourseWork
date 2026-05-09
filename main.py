@@ -1,3 +1,13 @@
+"""Main application entry point for the Road Builder game.
+
+This module initializes Pygame, sets up the display, and manages the state machine
+that controls navigation between views such as the main menu, level selection,
+difficulty screen, gameplay, level editor, and story intro.
+
+The application uses a simple integer-based state system to switch between screens,
+with each view handling its own rendering and input logic.
+"""
+
 import pygame
 import sys
 import os
@@ -10,6 +20,7 @@ from view.LevelEditorView import LevelEditorView
 from view.story_intro_view import StoryIntroView
 import config
 
+# State constants
 STATE_MAIN_MENU = 0
 STATE_LEVEL_SELECT = 1
 STATE_DIFFICULTY = 2
@@ -17,7 +28,28 @@ STATE_GAME = 3
 STATE_EDITOR = 4
 STATE_STORY = 5
 
+
 def main():
+    """Run the main game loop and manage application state transitions.
+
+    Initializes Pygame, creates the display window, and instantiates all necessary
+    view objects. The loop handles events, updates the current view, and renders
+    the appropriate screen based on the current state.
+
+    Supported states include:
+        - Main menu
+        - Story introduction
+        - Level selection (built-in and custom)
+        - Difficulty selection
+        - Gameplay
+        - Level editor
+
+    The function also manages background music playback (main menu only) and
+    proper cleanup on exit.
+
+    Returns:
+        None
+    """
     pygame.init()
     try:
         pygame.mixer.init()
@@ -46,6 +78,7 @@ def main():
     while running:
         clock.tick(60)
 
+        # Manage main menu music
         if state == STATE_MAIN_MENU and not main_music_playing:
             if pygame.mixer.get_init():
                 try:
@@ -63,6 +96,7 @@ def main():
                 except Exception as e:
                     print(f"[main] Failed to stop main menu music: {e}")
 
+        # Render current view
         if state == STATE_MAIN_MENU:
             main_menu_view.draw(screen)
         elif state == STATE_STORY:
@@ -83,6 +117,7 @@ def main():
 
         pygame.display.flip()
 
+        # Handle events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -158,7 +193,6 @@ def main():
                 if game_view is not None:
                     action = game_view.handle_event(event)
                     if action == "back":
-
                         game_view.stop_music()
                         state = STATE_LEVEL_SELECT
                         game_view = None
@@ -177,7 +211,6 @@ def main():
                                 game_view = GameLevelView(screen, game_model)
                             else:
                                 print("All levels complete!")
-
                                 game_view.stop_music()
                                 game_view = None
                                 state = STATE_MAIN_MENU
@@ -196,6 +229,7 @@ def main():
 
     pygame.quit()
     sys.exit()
+
 
 if __name__ == "__main__":
     main()
