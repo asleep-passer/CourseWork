@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>view.passmenu API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>view.passmenu</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="view.passmenu.PassMenuView"><code class="flex name class">
+<span>class <span class="ident">PassMenuView</span></span>
+<span>(</span><span>screen: pygame.surface.Surface, score: int, level_id: int, stars: int = 0)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class PassMenuView:
+    def __init__(self, screen: pg.Surface, score: int, level_id: int, stars: int = 0):
+        self.screen = screen
+        self.score = score
+        self.level_id = level_id
+        self.stars = min(max(stars, 0), 3)
+
+        if stars == 0:
+            self.stars = self._calculate_stars_from_score(score)
+
+        screen_w, screen_h = screen.get_size()
+        self.dialog_w, self.dialog_h = 400, 400
+        self.dialog_x = (screen_w - self.dialog_w) // 2
+        self.dialog_y = (screen_h - self.dialog_h) // 2
+
+        self.bg_color = (240, 248, 255)
+        self.border_color = (60, 120, 200)
+        self.star_color = (255, 215, 0)          # 金色实心
+        self.star_empty = (180, 180, 180)        # 灰色空心
+        self.text_color = (30, 30, 30)
+        self.shadow_color = (80, 80, 80)         # 星星投影
+
+        self.title_font = pg.font.Font(None, 40)
+        self.score_font = pg.font.Font(None, 32)
+
+        btn_width, btn_height = 120, 45
+        btn_y = self.dialog_y + self.dialog_h - 70
+
+        def set_next():
+            self._action = &#39;next_level&#39;
+        def set_retry():
+            self._action = &#39;retry&#39;
+
+        self.next_btn = ButtonView(
+            self.dialog_x + 30, btn_y, btn_width, btn_height, &#34;Next&#34;,
+            callback=set_next
+        )
+        self.retry_btn = ButtonView(
+            self.dialog_x + self.dialog_w - btn_width - 30, btn_y,
+            btn_width, btn_height, &#34;Retry&#34;,
+            callback=set_retry
+        )
+
+        self._action = None
+        self.visible = True
+
+        # 动画相关：星星逐个弹出
+        self.stars_revealed = 0          # 当前已显示的星星数
+        self.star_reveal_timer = 0       # 计时器
+        self.star_reveal_delay = 15      # 每颗星出现的间隔帧数（约0.25秒/60fps）
+        self._star_animation_done = False
+
+    def _calculate_stars_from_score(self, score: int) -&gt; int:
+        if score &gt;= 1000:
+            return 3
+        elif score &gt;= 800:
+            return 2
+        elif score &gt;= 500:
+            return 1
+        return 0
+
+    def _draw_star(self, center_x, center_y, radius, filled=True):
+        &#34;&#34;&#34;绘制一个带阴影和边框的五角星，加强立体感&#34;&#34;&#34;
+        points = []
+        inner_radius = radius * 0.4
+        for i in range(10):
+            angle = math.pi / 2 - i * math.pi / 5
+            if i % 2 == 0:
+                r = radius
+            else:
+                r = inner_radius
+            x = center_x + r * math.cos(angle)
+            y = center_y - r * math.sin(angle)
+            points.append((x, y))
+
+        if filled:
+            # 1. 投影（向下向右偏移 3px）
+            shadow_points = [(x+3, y+3) for (x, y) in points]
+            pg.draw.polygon(self.screen, self.shadow_color, shadow_points)
+            # 2. 描边（深色边框加粗）
+            pg.draw.polygon(self.screen, (180, 120, 0), points, 4)
+            # 3. 金色填充
+            pg.draw.polygon(self.screen, self.star_color, points)
+            # 4. 高光小圆点（星星中心偏左上）
+            pg.draw.circle(self.screen, (255, 255, 200), (int(center_x-5), int(center_y-5)), 5)
+        else:
+            # 空心星星：浅灰填充 + 深灰边框
+            pg.draw.polygon(self.screen, self.star_empty, points)
+            pg.draw.polygon(self.screen, (120, 120, 120), points, 2)
+
+    def handle_event(self, event: pg.event.Event) -&gt; Optional[str]:
+        if not self.visible:
+            return None
+        if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
+            pos = event.pos
+            for btn in [self.next_btn, self.retry_btn]:
+                if btn.rect.collidepoint(pos):
+                    btn.handle_click(pos)
+                    action = self._action
+                    self._action = None
+                    return action
+        return None
+
+    def draw(self) -&gt; None:
+        if not self.visible:
+            return
+
+        # 更新星星逐个弹出动画
+        if not self._star_animation_done and self.stars_revealed &lt; self.stars:
+            self.star_reveal_timer += 1
+            if self.star_reveal_timer &gt;= self.star_reveal_delay:
+                self.star_reveal_timer = 0
+                self.stars_revealed += 1
+        else:
+            self._star_animation_done = True
+
+        # 半透明遮罩
+        overlay = pg.Surface(self.screen.get_size(), pg.SRCALPHA)
+        overlay.fill((0, 0, 0, 128))
+        self.screen.blit(overlay, (0, 0))
+
+        # 对话框背景
+        dialog_rect = pg.Rect(self.dialog_x, self.dialog_y, self.dialog_w, self.dialog_h)
+        pg.draw.rect(self.screen, self.bg_color, dialog_rect, border_radius=15)
+        pg.draw.rect(self.screen, self.border_color, dialog_rect, 3, border_radius=15)
+
+        # 标题
+        title_text = self.title_font.render(f&#34;Level {self.level_id} Pass!&#34;, True, self.text_color)
+        title_rect = title_text.get_rect(center=(self.dialog_x + self.dialog_w // 2, self.dialog_y + 45))
+        self.screen.blit(title_text, title_rect)
+
+        # 星星（带动画和立体边框）
+        star_radius = 28
+        star_spacing = 75
+        total_width = 3 * star_spacing
+        start_x = self.dialog_x + (self.dialog_w - total_width) // 2 + star_spacing // 2
+        star_y = self.dialog_y + 135
+
+        for i in range(3):
+            filled = i &lt; self.stars_revealed   # 只显示已弹出的实心星星，未弹出则为空心
+            self._draw_star(start_x + i * star_spacing, star_y, star_radius, filled)
+
+        # 分数
+        score_text = self.score_font.render(f&#34;Score: {self.score}&#34;, True, self.text_color)
+        score_rect = score_text.get_rect(center=(self.dialog_x + self.dialog_w // 2, self.dialog_y + 225))
+        self.screen.blit(score_text, score_rect)
+
+        # 按钮
+        self.next_btn.draw(self.screen)
+        self.retry_btn.draw(self.screen)
+
+    def set_visible(self, visible: bool) -&gt; None:
+        self.visible = visible
+        if visible:
+            # 重置动画状态
+            self.stars_revealed = 0
+            self.star_reveal_timer = 0
+            self._star_animation_done = False
+
+    def update_stars(self, new_stars: int) -&gt; None:
+        self.stars = min(max(new_stars, 0), 3)
+
+    def update_score(self, new_score: int) -&gt; None:
+        self.score = new_score
+        self.stars = self._calculate_stars_from_score(new_score)</code></pre>
+</details>
+<div class="desc"></div>
+<h3>Methods</h3>
+<dl>
+<dt id="view.passmenu.PassMenuView.draw"><code class="name flex">
+<span>def <span class="ident">draw</span></span>(<span>self) ‑> None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def draw(self) -&gt; None:
+    if not self.visible:
+        return
+
+    # 更新星星逐个弹出动画
+    if not self._star_animation_done and self.stars_revealed &lt; self.stars:
+        self.star_reveal_timer += 1
+        if self.star_reveal_timer &gt;= self.star_reveal_delay:
+            self.star_reveal_timer = 0
+            self.stars_revealed += 1
+    else:
+        self._star_animation_done = True
+
+    # 半透明遮罩
+    overlay = pg.Surface(self.screen.get_size(), pg.SRCALPHA)
+    overlay.fill((0, 0, 0, 128))
+    self.screen.blit(overlay, (0, 0))
+
+    # 对话框背景
+    dialog_rect = pg.Rect(self.dialog_x, self.dialog_y, self.dialog_w, self.dialog_h)
+    pg.draw.rect(self.screen, self.bg_color, dialog_rect, border_radius=15)
+    pg.draw.rect(self.screen, self.border_color, dialog_rect, 3, border_radius=15)
+
+    # 标题
+    title_text = self.title_font.render(f&#34;Level {self.level_id} Pass!&#34;, True, self.text_color)
+    title_rect = title_text.get_rect(center=(self.dialog_x + self.dialog_w // 2, self.dialog_y + 45))
+    self.screen.blit(title_text, title_rect)
+
+    # 星星（带动画和立体边框）
+    star_radius = 28
+    star_spacing = 75
+    total_width = 3 * star_spacing
+    start_x = self.dialog_x + (self.dialog_w - total_width) // 2 + star_spacing // 2
+    star_y = self.dialog_y + 135
+
+    for i in range(3):
+        filled = i &lt; self.stars_revealed   # 只显示已弹出的实心星星，未弹出则为空心
+        self._draw_star(start_x + i * star_spacing, star_y, star_radius, filled)
+
+    # 分数
+    score_text = self.score_font.render(f&#34;Score: {self.score}&#34;, True, self.text_color)
+    score_rect = score_text.get_rect(center=(self.dialog_x + self.dialog_w // 2, self.dialog_y + 225))
+    self.screen.blit(score_text, score_rect)
+
+    # 按钮
+    self.next_btn.draw(self.screen)
+    self.retry_btn.draw(self.screen)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="view.passmenu.PassMenuView.handle_event"><code class="name flex">
+<span>def <span class="ident">handle_event</span></span>(<span>self, event: pygame.event.Event) ‑> str | None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def handle_event(self, event: pg.event.Event) -&gt; Optional[str]:
+    if not self.visible:
+        return None
+    if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
+        pos = event.pos
+        for btn in [self.next_btn, self.retry_btn]:
+            if btn.rect.collidepoint(pos):
+                btn.handle_click(pos)
+                action = self._action
+                self._action = None
+                return action
+    return None</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="view.passmenu.PassMenuView.set_visible"><code class="name flex">
+<span>def <span class="ident">set_visible</span></span>(<span>self, visible: bool) ‑> None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set_visible(self, visible: bool) -&gt; None:
+    self.visible = visible
+    if visible:
+        # 重置动画状态
+        self.stars_revealed = 0
+        self.star_reveal_timer = 0
+        self._star_animation_done = False</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="view.passmenu.PassMenuView.update_score"><code class="name flex">
+<span>def <span class="ident">update_score</span></span>(<span>self, new_score: int) ‑> None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def update_score(self, new_score: int) -&gt; None:
+    self.score = new_score
+    self.stars = self._calculate_stars_from_score(new_score)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="view.passmenu.PassMenuView.update_stars"><code class="name flex">
+<span>def <span class="ident">update_stars</span></span>(<span>self, new_stars: int) ‑> None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def update_stars(self, new_stars: int) -&gt; None:
+    self.stars = min(max(new_stars, 0), 3)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="view" href="index.html">view</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="view.passmenu.PassMenuView" href="#view.passmenu.PassMenuView">PassMenuView</a></code></h4>
+<ul class="">
+<li><code><a title="view.passmenu.PassMenuView.draw" href="#view.passmenu.PassMenuView.draw">draw</a></code></li>
+<li><code><a title="view.passmenu.PassMenuView.handle_event" href="#view.passmenu.PassMenuView.handle_event">handle_event</a></code></li>
+<li><code><a title="view.passmenu.PassMenuView.set_visible" href="#view.passmenu.PassMenuView.set_visible">set_visible</a></code></li>
+<li><code><a title="view.passmenu.PassMenuView.update_score" href="#view.passmenu.PassMenuView.update_score">update_score</a></code></li>
+<li><code><a title="view.passmenu.PassMenuView.update_stars" href="#view.passmenu.PassMenuView.update_stars">update_stars</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>

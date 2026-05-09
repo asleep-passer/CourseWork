@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>view.road_cell_view API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>view.road_cell_view</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="view.road_cell_view.RoadCellView"><code class="flex name class">
+<span>class <span class="ident">RoadCellView</span></span>
+<span>(</span><span>rect: pygame.rect.Rect, screen: pygame.surface.Surface)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class RoadCellView:
+    &#34;&#34;&#34;A view component that renders a single road cell within a grid layout.
+
+    Displays a semi-transparent grid background and delegates road rendering to
+    a :class:`RoadView`. Additionally overlays labels or borders for special
+    cell types such as start, end, or obstacle roads.
+
+    Attributes:
+        rect (pygame.Rect): The screen rectangle defining the cell&#39;s position and size.
+        screen (pygame.Surface): The Pygame surface to draw onto.
+        _road_view (RoadView or None): The current road view instance, if any.
+        _current_cell (RoadCellModel or None): The model currently associated with this view.
+        font (pygame.font.Font): Font used for rendering labels like &#39;S&#39; or &#39;E&#39;.
+        GRID_SIZE (int): Number of sub-cells in the background grid (currently 1).
+        ALPHA (int): Alpha transparency value for background and border colors.
+        BG_COLOR (tuple[int, int, int, int]): Background color of the grid cell (RGBA).
+        BORDER_COLOR (tuple[int, int, int, int]): Border color of the grid cell (RGBA).
+    &#34;&#34;&#34;
+
+    def __init__(self, rect: pygame.Rect, screen: pygame.Surface):
+        &#34;&#34;&#34;Initialize the RoadCellView.
+
+        Args:
+            rect (pygame.Rect): The bounding rectangle for this cell on screen.
+            screen (pygame.Surface): The Pygame surface to render onto.
+        &#34;&#34;&#34;
+        self.rect = rect
+        self.screen = screen
+        self._road_view = None
+        self._current_cell = None
+        self.font = pygame.font.Font(None, 20)
+
+        self.GRID_SIZE = 1
+        self.ALPHA = 128
+        self.BG_COLOR = (210, 210, 210, self.ALPHA)
+        self.BORDER_COLOR = (170, 170, 170, self.ALPHA)
+
+    def draw(self, cell_model: RoadCellModel):
+        &#34;&#34;&#34;Render the road cell and its background grid.
+
+        Draws a semi-transparent grid background, then renders the road using
+        an internal :class:`RoadView`. Special cell types (start, end, obstacle)
+        are annotated with colored borders and optional text labels.
+
+        Args:
+            cell_model (RoadCellModel or None): The road cell model to render.
+                If ``None``, only the background grid is drawn.
+        &#34;&#34;&#34;
+        grid_surface = pygame.Surface(self.rect.size, pygame.SRCALPHA)
+        cell_width = self.rect.width // self.GRID_SIZE
+        cell_height = self.rect.height // self.GRID_SIZE
+
+        for row in range(self.GRID_SIZE):
+            for col in range(self.GRID_SIZE):
+                x = col * cell_width
+                y = row * cell_height
+                small_rect = pygame.Rect(x, y, cell_width - 1, cell_height - 1)
+                pygame.draw.rect(grid_surface, self.BG_COLOR, small_rect)
+                pygame.draw.rect(grid_surface, self.BORDER_COLOR, small_rect, 1)
+
+        self.screen.blit(grid_surface, self.rect.topleft)
+
+        if cell_model is None:
+            self._current_cell = None
+            return
+
+        if self._road_view is None or self._current_cell != cell_model:
+            self._road_view = RoadView(cell_model.road_model, self.screen, self.rect)
+            self._current_cell = cell_model
+
+        self._road_view.set_position(self.rect)
+        self._road_view.draw()
+
+        from models.Road import RoadType
+        cell_type = cell_model.get_type()
+        if cell_type == RoadType.START_ROAD:
+            pygame.draw.rect(self.screen, (0, 180, 0), self.rect, 3)
+            label = self.font.render(&#34;S&#34;, True, (0, 100, 0))
+            self.screen.blit(label, (self.rect.x + 5, self.rect.y + 5))
+        elif cell_type == RoadType.END_ROAD:
+            pygame.draw.rect(self.screen, (180, 0, 0), self.rect, 3)
+            label = self.font.render(&#34;E&#34;, True, (180, 0, 0))
+            self.screen.blit(label, (self.rect.x + 5, self.rect.y + 5))
+        elif cell_type == RoadType.OBSTACLE_ROAD:
+            pygame.draw.rect(self.screen, (100, 100, 100), self.rect, 3)
+
+    def trigger_rotate_animation(self, duration: int = 500):
+        &#34;&#34;&#34;Trigger a rotation animation on the contained road view.
+
+        Delegates the animation request to the internal :class:`RoadView`.
+
+        Args:
+            duration (int): Animation duration in milliseconds. Defaults to 500.
+        &#34;&#34;&#34;
+        if self._road_view is not None:
+            self._road_view.rotated(duration)</code></pre>
+</details>
+<div class="desc"><p>A view component that renders a single road cell within a grid layout.</p>
+<p>Displays a semi-transparent grid background and delegates road rendering to
+a :class:<code>RoadView</code>. Additionally overlays labels or borders for special
+cell types such as start, end, or obstacle roads.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>rect</code></strong> :&ensp;<code>pygame.Rect</code></dt>
+<dd>The screen rectangle defining the cell's position and size.</dd>
+<dt><strong><code>screen</code></strong> :&ensp;<code>pygame.Surface</code></dt>
+<dd>The Pygame surface to draw onto.</dd>
+<dt><strong><code>_road_view</code></strong> :&ensp;<code>RoadView</code> or <code>None</code></dt>
+<dd>The current road view instance, if any.</dd>
+<dt><strong><code>_current_cell</code></strong> :&ensp;<code>RoadCellModel</code> or <code>None</code></dt>
+<dd>The model currently associated with this view.</dd>
+<dt><strong><code>font</code></strong> :&ensp;<code>pygame.font.Font</code></dt>
+<dd>Font used for rendering labels like 'S' or 'E'.</dd>
+<dt><strong><code>GRID_SIZE</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of sub-cells in the background grid (currently 1).</dd>
+<dt><strong><code>ALPHA</code></strong> :&ensp;<code>int</code></dt>
+<dd>Alpha transparency value for background and border colors.</dd>
+<dt><strong><code>BG_COLOR</code></strong> :&ensp;<code>tuple[int, int, int, int]</code></dt>
+<dd>Background color of the grid cell (RGBA).</dd>
+<dt><strong><code>BORDER_COLOR</code></strong> :&ensp;<code>tuple[int, int, int, int]</code></dt>
+<dd>Border color of the grid cell (RGBA).</dd>
+</dl>
+<p>Initialize the RoadCellView.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>rect</code></strong> :&ensp;<code>pygame.Rect</code></dt>
+<dd>The bounding rectangle for this cell on screen.</dd>
+<dt><strong><code>screen</code></strong> :&ensp;<code>pygame.Surface</code></dt>
+<dd>The Pygame surface to render onto.</dd>
+</dl></div>
+<h3>Methods</h3>
+<dl>
+<dt id="view.road_cell_view.RoadCellView.draw"><code class="name flex">
+<span>def <span class="ident">draw</span></span>(<span>self,<br>cell_model: <a title="models.roadcell.RoadCellModel" href="../models/roadcell.html#models.roadcell.RoadCellModel">RoadCellModel</a>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def draw(self, cell_model: RoadCellModel):
+    &#34;&#34;&#34;Render the road cell and its background grid.
+
+    Draws a semi-transparent grid background, then renders the road using
+    an internal :class:`RoadView`. Special cell types (start, end, obstacle)
+    are annotated with colored borders and optional text labels.
+
+    Args:
+        cell_model (RoadCellModel or None): The road cell model to render.
+            If ``None``, only the background grid is drawn.
+    &#34;&#34;&#34;
+    grid_surface = pygame.Surface(self.rect.size, pygame.SRCALPHA)
+    cell_width = self.rect.width // self.GRID_SIZE
+    cell_height = self.rect.height // self.GRID_SIZE
+
+    for row in range(self.GRID_SIZE):
+        for col in range(self.GRID_SIZE):
+            x = col * cell_width
+            y = row * cell_height
+            small_rect = pygame.Rect(x, y, cell_width - 1, cell_height - 1)
+            pygame.draw.rect(grid_surface, self.BG_COLOR, small_rect)
+            pygame.draw.rect(grid_surface, self.BORDER_COLOR, small_rect, 1)
+
+    self.screen.blit(grid_surface, self.rect.topleft)
+
+    if cell_model is None:
+        self._current_cell = None
+        return
+
+    if self._road_view is None or self._current_cell != cell_model:
+        self._road_view = RoadView(cell_model.road_model, self.screen, self.rect)
+        self._current_cell = cell_model
+
+    self._road_view.set_position(self.rect)
+    self._road_view.draw()
+
+    from models.Road import RoadType
+    cell_type = cell_model.get_type()
+    if cell_type == RoadType.START_ROAD:
+        pygame.draw.rect(self.screen, (0, 180, 0), self.rect, 3)
+        label = self.font.render(&#34;S&#34;, True, (0, 100, 0))
+        self.screen.blit(label, (self.rect.x + 5, self.rect.y + 5))
+    elif cell_type == RoadType.END_ROAD:
+        pygame.draw.rect(self.screen, (180, 0, 0), self.rect, 3)
+        label = self.font.render(&#34;E&#34;, True, (180, 0, 0))
+        self.screen.blit(label, (self.rect.x + 5, self.rect.y + 5))
+    elif cell_type == RoadType.OBSTACLE_ROAD:
+        pygame.draw.rect(self.screen, (100, 100, 100), self.rect, 3)</code></pre>
+</details>
+<div class="desc"><p>Render the road cell and its background grid.</p>
+<p>Draws a semi-transparent grid background, then renders the road using
+an internal :class:<code>RoadView</code>. Special cell types (start, end, obstacle)
+are annotated with colored borders and optional text labels.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>cell_model</code></strong> :&ensp;<code>RoadCellModel</code> or <code>None</code></dt>
+<dd>The road cell model to render.
+If <code>None</code>, only the background grid is drawn.</dd>
+</dl></div>
+</dd>
+<dt id="view.road_cell_view.RoadCellView.trigger_rotate_animation"><code class="name flex">
+<span>def <span class="ident">trigger_rotate_animation</span></span>(<span>self, duration: int = 500)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def trigger_rotate_animation(self, duration: int = 500):
+    &#34;&#34;&#34;Trigger a rotation animation on the contained road view.
+
+    Delegates the animation request to the internal :class:`RoadView`.
+
+    Args:
+        duration (int): Animation duration in milliseconds. Defaults to 500.
+    &#34;&#34;&#34;
+    if self._road_view is not None:
+        self._road_view.rotated(duration)</code></pre>
+</details>
+<div class="desc"><p>Trigger a rotation animation on the contained road view.</p>
+<p>Delegates the animation request to the internal :class:<code>RoadView</code>.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>duration</code></strong> :&ensp;<code>int</code></dt>
+<dd>Animation duration in milliseconds. Defaults to 500.</dd>
+</dl></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="view" href="index.html">view</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="view.road_cell_view.RoadCellView" href="#view.road_cell_view.RoadCellView">RoadCellView</a></code></h4>
+<ul class="">
+<li><code><a title="view.road_cell_view.RoadCellView.draw" href="#view.road_cell_view.RoadCellView.draw">draw</a></code></li>
+<li><code><a title="view.road_cell_view.RoadCellView.trigger_rotate_animation" href="#view.road_cell_view.RoadCellView.trigger_rotate_animation">trigger_rotate_animation</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>
