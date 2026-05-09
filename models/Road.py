@@ -36,7 +36,7 @@ class RoadModel:
 
         Args:
             road_type (RoadType): roads type。
-            rotated (int): Initial rotation count（0-3）。
+            rotated (int): Initial rotation count（0-3）
         """
         self.road_type = road_type
         self._rotated = rotated
