@@ -2,7 +2,7 @@
 
 Defines an abstract base class for road lists and two concrete
 implementations: `NormalRoadListModel` (finite counts)
-和 `AdminRoadListModel`（无限道路，供管理员模式使用）。
+and `AdminRoadListModel`
 """
 
 from abc import ABC
@@ -80,11 +80,11 @@ class RoadListModel(ABC):
             return "inf"
         return self._road_num[road_type]
     def set_road_num(self,road_type:rt,count:int):
-        """设置指定类型道路的数量。
+        """Set the number of roads of the specified type.
 
         Args:
-            road_type (RoadType): 道路类型。
-            count (int): 数量（负数表示无限）。
+            road_type (RoadType): The type of the road to be set.
+            count (int): The number of roads (negative number represents infinite).
         """
         self._road_num[road_type]=count
 

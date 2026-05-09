@@ -1,6 +1,6 @@
 """Road controller module.
 
-此模块包含 `RoadController`，用于封装对道路相关逻辑的高层控制接口。
+This module includes `RoadController`, which serves as a high-level control interface for encapsulating the logic related to roads.
 contains the `RoadController` class which is intended to encapsulate high-level
 control logic related to roads.
 

@@ -79,7 +79,7 @@ class GameLevelController:
             # Read available road counts
             if current_line < len(lines):
                 available_roads = list(map(int, lines[current_line].strip().split()))
-                # 确保有4个值，与硬编码配置匹配
+                # Ensure that there are 4 values that match the hardcoded configuration.
                 if len(available_roads) >= 4:
                     data.roads = tuple(available_roads[:4]) # type: ignore
             

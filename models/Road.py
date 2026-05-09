@@ -1,14 +1,13 @@
-"""道路模型模块。
-
-定义道路类型、方向枚举以及 `RoadModel` 类，负责表示单个道路单元的类型与旋转状态，
-并计算当前可通行方向。
+"""Road Model Module.
+Define the enumeration for road types and directions, as well as the `RoadModel` class, which is responsible for representing the type and rotation status of a single road segment,
+and calculate the current accessible direction. 
 """
 
 from enum import Enum
 
 
 class Direction(Enum):
-    """表示道路可通行的方向。"""
+    #Indicates the direction in which the road is accessible.
     UP = 0
     RIGHT = 1
     DOWN = 2
@@ -16,7 +15,8 @@ class Direction(Enum):
 
 
 class RoadType(Enum):
-    """道路类型枚举，用于区分不同形状与功能的道路单元。"""
+    """Road type enumeration,
+    used to distinguish different shapes and functions of road units."""
     OBSTACLE_ROAD = 0
     STRAIGHT_ROAD = 1
     BEND_ROAD = 2
@@ -27,17 +27,16 @@ class RoadType(Enum):
 
 
 class RoadModel:
-    """表示单个道路单元的模型。
-
-    保存道路类型与当前旋转状态，并能计算在当前旋转下的可通行方向。
+    """Model representing a single road unit. 
+       Save the road type and the current rotation status, and be able to calculate the passable directions under the current rotation.
     """
 
     def __init__(self, road_type: RoadType, rotated: int = 0):
-        """创建 `RoadModel`。
+        """create`RoadModel`。
 
         Args:
-            road_type (RoadType): 道路类型。
-            rotated (int): 初始旋转次数（0-3）。
+            road_type (RoadType): roads type。
+            rotated (int): Initial rotation count（0-3）。
         """
         self.road_type = road_type
         self._rotated = rotated
@@ -55,16 +54,16 @@ class RoadModel:
         self._passable = base[road_type]
 
     def get_passable_direction(self):
-        """返回在当前旋转状态下的可通行方向元组（Direction）。"""
+        #Return the passable directions tuple (Direction) under the current rotation status.
         return tuple(
             Direction((d.value + self._rotated) % 4)
             for d in self._passable
         )
 
     def rotate(self):
-        """将道路顺时针旋转 90 度（内部计数递增）。"""
+        #Rotate the road clockwise by 90 degrees (with the internal count increasing).
         self._rotated = (self._rotated + 1) % 4
 
     def reset(self):
-        """重置道路的旋转状态为初始方向（0）。"""
+        #Reset the road's rotation status to the initial direction (0).
         self._rotated = 0
