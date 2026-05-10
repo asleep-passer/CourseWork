@@ -1,3 +1,6 @@
+"""Dialog UI component for popup messages and interactive buttons.
+Provides a semi-transparent overlay dialog with text and clickable buttons.
+"""
 import pygame
 from typing import List
 from view.button_view import ButtonView
@@ -11,25 +14,53 @@ GRAY_OVERLAY = (20, 20, 20, 160)
 
 
 class DialogView:
+    """Popup dialog window with text message and interactive buttons.
+    Handles visibility, rendering, overlay, text wrapping, and button click events.
+    """
     def __init__(self, x: int, y: int, width: int, height: int) -> None:
+        """Initialize a dialog box with position and dimensions.
+
+        Args:
+            x: X coordinate of the dialog's top-left corner
+            y: Y coordinate of the dialog's top-left corner
+            width: Dialog width in pixels
+            height: Dialog height in pixels
+        """
         self.rect = pygame.Rect(x, y, width, height)
         self.visible = False
         self.message = ""
         self.buttons: List[ButtonView] = []
 
     def set_message(self, msg: str) -> None:
+        """Set the text message to display in the dialog.
+
+        Args:
+            msg: Text string to show (supports line breaks)
+        """
         self.message = msg
 
     def add_button(self, btn: ButtonView) -> None:
+        """Add a clickable button to the dialog.
+
+        Args:
+            btn: ButtonView instance to include in the dialog
+        """
         self.buttons.append(btn)
 
     def show(self) -> None:
+        """Show the dialog and enable interaction."""
         self.visible = True
 
     def hide(self) -> None:
+        """Hide the dialog and disable interaction."""
         self.visible = False
 
     def draw(self, screen: pygame.Surface) -> None:
+        """Render the dialog overlay, background, text, and buttons.
+
+        Args:
+            screen: Pygame surface to draw the dialog on
+        """
         if not self.visible:
             return
 
@@ -57,6 +88,11 @@ class DialogView:
             btn.draw(screen)
 
     def handle_click(self, mouse_pos):
+        """Forward mouse click events to dialog buttons if visible.
+
+        Args:
+            mouse_pos: (x, y) coordinates of the mouse click
+        """
         if not self.visible:
             return
         for btn in self.buttons:

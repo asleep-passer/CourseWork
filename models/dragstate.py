@@ -1,10 +1,17 @@
+"""Drag state model module.
+
+Provides `DragStateModel` which records and manipulates temporary state
+during drag interactions in the view layer. This module does not handle
+rendering or event dispatch; it only maintains drag-related data.
+"""
+
 from typing import Tuple, Optional
 from .Road import RoadModel
 
 
 class DragStateModel:
-    """
-    Temporary state model for road dragging operations.
+    """Temporary state model for road dragging operations.
+
     Maintains the currently dragged road instance and its position during interaction.
 
     Attributes:

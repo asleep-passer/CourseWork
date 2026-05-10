@@ -8,7 +8,16 @@ FONT_TITLE = pygame.font.Font(None, 40)
 BG = (235, 245, 255)
 
 class DifficultySelectView:
+    """View class for the difficulty selection screen.
+    Handles UI rendering, button layout, background loading, and click events.
+    """
     def __init__(self, w, h):
+        """Initialize the difficulty selection view with buttons and background.
+
+        Args:
+            w: Screen width in pixels
+            h: Screen height in pixels
+        """
         self.w = w
         self.h = h
         self.buttons = []
@@ -37,6 +46,11 @@ class DifficultySelectView:
             print("[DifficultySelect] Background not loaded:", e)
 
     def draw(self, screen):
+        """Render the background and all buttons onto the screen.
+
+        Args:
+            screen: Pygame surface to draw on
+        """
         if self.background:
             screen.blit(self.background, (0, 0))
         else:
@@ -46,6 +60,14 @@ class DifficultySelectView:
             btn.draw(screen)
 
     def handle_click(self, mouse_pos: Tuple[int, int]) -> Optional[str]:
+        """Detect button clicks and return the clicked button text.
+
+        Args:
+            mouse_pos: Tuple of (x, y) coordinates of the mouse click
+
+        Returns:
+            Button text if clicked, None otherwise
+        """
         for btn in self.buttons:
             if btn.rect.collidepoint(mouse_pos):
                 return btn.text

@@ -1,24 +1,29 @@
+"""Road list models module.
+
+Defines an abstract base class for road lists and two concrete
+implementations: `NormalRoadListModel` (finite counts)
+and `AdminRoadListModel`
+"""
+
 from abc import ABC
 from .Road import RoadType as rt
 from .Road import RoadModel as rm
 
+
 class RoadListModel(ABC):
-    """
-    An abstract list of roads,
-    providing three methods:
-    retrieving roads,
-    storing roads,
-    and viewing the number of roads.
+    """Abstract base class for a road list.
+
+    Provides interfaces to get, store, and query the number of roads.
 
     Attributes:
-        _road_num (Dict[RoadType:int]):        The number of roads of the corresponding road type.
-        _road_list (Dict[RoadType:RoadModel]): The instances of road of the corresponding road type.
+        _road_num (Dict[RoadType,int]): Number of roads per type (negative
+            values represent infinite availability).
+        _road_list (Dict[RoadType,List[RoadModel]]): Pools of reusable road
+            instances per type.
     """
 
     def __init__(self) -> None:
-        """
-        Create attributes.
-        """
+        """Create internal count and list dictionaries."""
         self._road_num={}
         self._road_list={}
         pass
@@ -75,6 +80,12 @@ class RoadListModel(ABC):
             return "inf"
         return self._road_num[road_type]
     def set_road_num(self,road_type:rt,count:int):
+        """Set the number of roads of the specified type.
+
+        Args:
+            road_type (RoadType): The type of the road to be set.
+            count (int): The number of roads (negative number represents infinite).
+        """
         self._road_num[road_type]=count
 
 

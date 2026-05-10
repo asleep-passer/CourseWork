@@ -1,21 +1,38 @@
+"""Game level controller module.
+
+Provides utilities to load level data from save files and convert it to the
+runtime format expected by the game. The main class, `GameLevelController`,
+encapsulates the level grid, available road counts, locked cells, and rotation
+information.
+"""
+
 import config
 from typing import List, Tuple, Optional
 from models.Road import RoadType
 
+
 class GameLevelController:
-    """
-    临时存储关卡信息的数据包，属性结构与硬编码配置完全匹配
+    """Container for temporary level data matching the hard-coded config
+    structure.
+
+    Attributes:
+        map (List[List[str]]): 4x4 character grid containing 'S' (start), 'E'
+            (end), 'O' (obstacle), or ' ' (empty).
+        roads (Tuple[int,int,int,int]): Available road counts (straight, bend,
+            T, cross).
+        locked (List[List[bool]]): Lock state for each cell.
+        rotation (List[List[int]]): Rotation counts (0-3) for each cell.
     """
     def __init__(self):
-        self.map: List[List[str]] = []  # 4x4 网格，包含 'S', 'E', 'O', ' '
-        self.roads: Tuple[int, int, int, int] = (0, 0, 0, 0)  # (straight, curve, t_junction, cross)
-        self.locked: List[List[bool]] = [[False]*4 for _ in range(4)]  # 锁定状态
-        self.rotation: List[List[int]] = [[0]*4 for _ in range(4)]  # 旋转状态 (0, 1, 2, 3) 对应 (0, 90, 180, 270) 度
+        self.map: List[List[str]] = []  # 4x4 grid containing 'S', 'E', 'O', ' '
+        self.roads: Tuple[int, int, int, int] = (0, 0, 0, 0)  # (straight, bend, t_junction, cross)
+        self.locked: List[List[bool]] = [[False]*4 for _ in range(4)]  # lock state
+        self.rotation: List[List[int]] = [[0]*4 for _ in range(4)]  # rotation state (0-3) corresponding to (0,90,180,270) degrees
 
     @classmethod
     def load_from_file(cls, level_id: int) -> Optional['GameLevelController']:
-        """
-        从文件加载关卡数据并转换为与硬编码配置匹配的格式
+        """Load level data from a file and convert it to the format matching
+        the hard-coded configuration.
         """
         try:
             level_id = max(1, level_id)
@@ -27,11 +44,11 @@ class GameLevelController:
             if not lines:
                 return None
                 
-            # 解析第一行：行数和列数
+            # Parse the first line: rows and cols
             rows, cols = map(int, lines[0].strip().split())
             data = cls()
             
-            # 读取道路类型矩阵
+            # Read the road type matrix
             current_line = 1
             road_types = []
             for _ in range(rows):
@@ -41,7 +58,7 @@ class GameLevelController:
                 road_types.append(row)
                 current_line += 1
             
-            # 读取锁定状态
+            # Read locked state
             data.locked = []
             for _ in range(rows):
                 if current_line >= len(lines):
@@ -50,7 +67,7 @@ class GameLevelController:
                 data.locked.append([bool(x) for x in row])
                 current_line += 1
             
-            # 读取旋转状态
+            # Read rotation state
             data.rotation = []
             for _ in range(rows):
                 if current_line >= len(lines):
@@ -59,14 +76,14 @@ class GameLevelController:
                 data.rotation.append(row)
                 current_line += 1
             
-            # 读取可用道路数量
+            # Read available road counts
             if current_line < len(lines):
                 available_roads = list(map(int, lines[current_line].strip().split()))
-                # 确保有4个值，与硬编码配置匹配
+                # Ensure that there are 4 values that match the hardcoded configuration.
                 if len(available_roads) >= 4:
                     data.roads = tuple(available_roads[:4]) # type: ignore
             
-            # 将道路类型矩阵转换为硬编码配置格式
+            # Convert the road type matrix to the hard-coded config format
             # 5=START_ROAD -> 'S', 6=END_ROAD -> 'E', 0=OBSTACLE_ROAD -> 'O', 7=EMPTY -> ' '
             data.map = []
             for r in range(min(rows, 4)):  # 限制为4x4
@@ -86,7 +103,7 @@ class GameLevelController:
                         row_data.append(' ')
                 data.map.append(row_data)
             
-            # 确保是4x4网格
+            # Ensure the map is 4x4
             while len(data.map) < 4:
                 data.map.append([' '] * 4)
             for i in range(4):

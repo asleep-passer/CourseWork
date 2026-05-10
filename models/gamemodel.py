@@ -1,3 +1,11 @@
+"""Game models module.
+
+Contains models for game levels, the map, and road lists. These classes are
+responsible for storing game state, loading level configurations, and
+providing level-related operations. The primary class is `GameLevelModel`,
+which represents the runtime state and behavior of a single level.
+"""
+
 from enum import Enum
 from typing import Optional, List, Tuple
 import os
@@ -56,11 +64,26 @@ LEVEL_CONFIGS = {
 
 
 class GameLevelModel:
+    """Model class representing a single game level's state.
+
+    Responsibilities include: loading level configurations, initializing the
+    map and road resources, managing timing and score calculations, and
+    checking level completion.
+    """
+
     def __init__(self,
                  level_id: int = 1,
                  player_road_list: Optional[RoadListModel] = None,
                  difficulty: Difficulty = Difficulty.EASY,
                  initial_score: int = 0) -> None:
+        """Initialize a `GameLevelModel` instance.
+
+        Args:
+            level_id (int): Level identifier used to load built-in or custom levels.
+            player_road_list (Optional[RoadListModel]): Optional road list for the player.
+            difficulty (Difficulty): Difficulty level affecting initial road counts and scoring.
+            initial_score (int): Initial score.
+        """
         self.level_id = level_id
         self.map = MapModel(rows=4, cols=4)
         self.difficulty = difficulty
@@ -78,6 +101,15 @@ class GameLevelModel:
             self.load_level(level_id)
 
     def load_level(self, level_id: int):
+        """Load and initialize level data from built-in `LEVEL_CONFIGS` or an
+        external file.
+
+        Road counts are adjusted according to the current difficulty and map
+        cells are initialized as `RoadCellModel` instances.
+
+        Args:
+            level_id (int): Level identifier.
+        """
         if level_id in LEVEL_CONFIGS:
             config = LEVEL_CONFIGS[level_id]
             layout = config["map"]
@@ -125,6 +157,18 @@ class GameLevelModel:
         self.active = False
 
     def _load_from_file(self, level_id: int):
+        """Load a custom level from a save file and initialize the model.
+
+        The file format is expected to contain a type grid, lock/rotation
+        information, and road counts.
+
+        Args:
+            level_id (int): Custom level file identifier.
+
+        Raises:
+            FileNotFoundError: If the level file does not exist.
+            ValueError: If the file format is invalid.
+        """
         file_path = os.path.join(config.saves_path, f"level{level_id}.txt")
         if not os.path.exists(file_path):
             raise FileNotFoundError(f"Custom level file {file_path} not found")
@@ -134,13 +178,13 @@ class GameLevelModel:
             if len(lines) < 2:
                 raise ValueError("Invalid level file format")
 
-            # 读取类型网格 (第1-4行，索引1-4)
+            # Read the type grid (lines 1-4)
             type_grid = []
             for i in range(4):
                 type_grid.append(list(map(int, lines[1 + i].split())))
-
-            # 锁定状态 (第5-8行，索引5-8) 在文件中处于旋转网格之前，我们不使用它，但要跳过以准确读取后面的数据
-            # 旋转网格 (第9-12行，索引9-12)
+            # Locked state (lines 5-8) may appear before the rotation grid in
+            # the file; we skip or read appropriately to keep offsets correct.
+            # Rotation grid (lines 9-12)
             rotation_grid = []
             for i in range(4):
                 idx = 9 + i
@@ -149,7 +193,7 @@ class GameLevelModel:
                 else:
                     rotation_grid.append([0, 0, 0, 0])
 
-            # 最后一行是道路数量
+            # The last line contains road counts
             last_line = lines[-1] if lines else "10 6 3 1"
             raw_counts = list(map(int, last_line.split()))
             while len(raw_counts) < 4:
@@ -176,7 +220,7 @@ class GameLevelModel:
                 elif t == 0:
                     cell = RoadCellModel(r, c, RoadType.OBSTACLE_ROAD)
                 if cell:
-                    # 应用保存的旋转次数
+                    # Apply the saved rotation counts
                     for _ in range(rotation_grid[r][c]):
                         cell.rotate()
                     self.map.set_cell(r, c, cell)
@@ -201,6 +245,19 @@ class GameLevelModel:
         model.elapsed_time = 0
         model.active = False
 
+        """Create and return a `GameLevelModel` instance loaded from a custom
+        level file for tools or editors.
+
+        Use case: level editors or tools that need to preview a custom level
+        without starting the full game.
+
+        Args:
+            level_id (int): Custom level identifier.
+            difficulty (Difficulty): Difficulty to apply when loading.
+
+        Returns:
+            GameLevelModel: The loaded model instance.
+        """
         file_path = os.path.join(config.saves_path, f"level{level_id}.txt")
         if not os.path.exists(file_path):
             raise FileNotFoundError(f"Custom level file {file_path} not found")
@@ -210,12 +267,12 @@ class GameLevelModel:
             if len(lines) < 2:
                 raise ValueError("Invalid level file format")
 
-            # 读取类型网格
+            # Read the type grid
             type_grid = []
             for i in range(4):
                 type_grid.append(list(map(int, lines[1 + i].split())))
 
-            # 跳过锁定状态，读取旋转网格
+            # Skip locked state and read rotation grid
             rotation_grid = []
             for i in range(4):
                 idx = 9 + i
@@ -224,7 +281,7 @@ class GameLevelModel:
                 else:
                     rotation_grid.append([0, 0, 0, 0])
 
-            # 最后一行是道路数量
+            # The last line contains road counts
             last_line = lines[-1] if lines else "10 6 3 1"
             raw_counts = list(map(int, last_line.split()))
             while len(raw_counts) < 4:
@@ -252,7 +309,7 @@ class GameLevelModel:
                 elif t == 0:
                     cell = RoadCellModel(r, c, RoadType.OBSTACLE_ROAD)
                 if cell:
-                    # 应用保存的旋转次数
+                    # Apply saved rotation counts
                     for _ in range(rotation_grid[r][c]):
                         cell.rotate()
                     model.map.set_cell(r, c, cell)
@@ -260,27 +317,43 @@ class GameLevelModel:
         return model
 
     def set_admin_mode(self, enabled: bool = True) -> None:
+        """Toggle admin mode. In admin mode, the road list contains unlimited roads.
+
+        Args:
+            enabled (bool): Whether to enable admin mode.
+        """
         if enabled:
             self.admin_road_list = AdminRoadListModel()
         else:
             self.admin_road_list = None
 
     def add_score(self, points: int) -> None:
+        """Add the specified number of points to the current score.
+
+        Args:
+            points (int): Points to add.
+        """
         self.score += points
 
     def start_timer(self):
+        """Start the level timer (records start time in milliseconds)."""
         if not self.active:
             self.start_time = pg.time.get_ticks()
             self.active = True
 
     def update_time(self):
+        """Update elapsed time (in milliseconds) using pygame's timer."""
         if self.active and not self.is_complete:
             self.elapsed_time = pg.time.get_ticks() - self.start_time
 
     def get_elapsed_seconds(self) -> float:
+        """Return elapsed time in seconds as a float."""
         return self.elapsed_time / 1000.0
 
     def calculate_final_score(self):
+        """Calculate the final score based on elapsed time and difficulty, and
+        store it in `self.score`.
+        """
         seconds = self.get_elapsed_seconds()
         base = max(0, 1000 - int(seconds * 10))
         multiplier = 1.0
@@ -291,6 +364,15 @@ class GameLevelModel:
         self.score = int(base * multiplier)
 
     def check_completion(self) -> bool:
+        """Check whether there is a connected path from the start to end on
+        the map.
+
+        If a path is found and the level is not already marked complete, this
+        will calculate the final score and set `is_complete` to True.
+
+        Returns:
+            bool: True if the level is complete.
+        """
         connected = self.map.is_path_connected()
         if connected and not self.is_complete:
             self.is_complete = True
@@ -298,7 +380,10 @@ class GameLevelModel:
         return self.is_complete
 
     def get_path(self) -> List[Tuple[int, int]]:
+        """Return the cell-coordinate path from start to end on the current
+        map, if one exists."""
         return self.map.get_path()
 
     def reset(self) -> None:
+        """Reset the level to its initially loaded state."""
         self.load_level(self.level_id)
