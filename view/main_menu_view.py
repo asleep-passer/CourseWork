@@ -1,3 +1,6 @@
+"""Main menu UI view for the game.
+Displays the main menu with background image and navigation buttons.
+"""
 import pygame
 import os
 from typing import Optional, Tuple
@@ -8,7 +11,16 @@ FONT_TITLE = pygame.font.Font(None, 50)
 BACKGROUND_COLOR = (235, 245, 255)
 
 class MainMenuView:
+    """Main menu interface that provides game navigation options.
+    Contains Start Game, Level Editor, and Quit buttons.
+    """
     def __init__(self, w: int, h: int):
+        """Initialize main menu with screen size and UI elements.
+
+        Args:
+            w: Screen width
+            h: Screen height
+        """
         self.w = w
         self.h = h
         self.buttons = []
@@ -34,19 +46,31 @@ class MainMenuView:
             print(f"[MainMenu] Background not loaded: {e}")
 
     def draw(self, screen: pygame.Surface) -> None:
+        """Render background and all menu buttons to the screen.
+
+        Args:
+            screen: Pygame surface to draw on
+        """
         self.w, self.h = screen.get_size()
         if self.background:
             screen.blit(self.background, (0, 0))
         else:
             screen.fill(BACKGROUND_COLOR)
 
-        #title = FONT_TITLE.render("Road Builder", True, (20, 40, 80))
-        #screen.blit(title, title.get_rect(center=(self.w // 2, 120)))
+   
 
         for btn in self.buttons:
             btn.draw(screen)
 
     def handle_click(self, mouse_pos: Tuple[int, int]) -> Optional[str]:
+        """Detect mouse clicks on menu buttons and return the action.
+
+        Args:
+            mouse_pos: Mouse (x, y) coordinates
+
+        Returns:
+            Button text (action name) or None if no button was clicked
+        """
         for btn in self.buttons:
             if btn.rect.collidepoint(mouse_pos):
                 return btn.text

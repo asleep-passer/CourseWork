@@ -1,10 +1,23 @@
+"""Inventory UI component that displays available road pieces and allows selection.
+Shows road icons, remaining counts, and handles user click selection.
+"""
 import pygame
 from models.Road import RoadType
 from models.roadlist import RoadListModel
 import os
 
 class InventoryView:
+    """UI panel for displaying and selecting available road types in the level editor.
+    Supports visual previews, count display, and click selection.
+    """
     def __init__(self, x, y, screen):
+        """Initialize the inventory panel at a fixed screen position.
+
+        Args:
+            x: X coordinate of the panel's top-left corner
+            y: Y coordinate of the panel's top-left corner
+            screen: Pygame surface to draw on
+        """
         self.x = x
         self.y = y
         self.screen = screen
@@ -17,6 +30,7 @@ class InventoryView:
         self._load_previews()
 
     def _load_previews(self):
+        """Load and scale road icon images from assets for visual preview display."""
         base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         img_map = {
             RoadType.STRAIGHT_ROAD: "roadTile27.png",
@@ -33,6 +47,11 @@ class InventoryView:
                 self.previews[rt] = None
 
     def update_from_model(self, road_list):
+        """Refresh inventory display with current road counts from the data model.
+
+        Args:
+            road_list: Model containing available road counts
+        """
         self.buttons.clear()
         spacing = 90
         for i, rt in enumerate(self.display_types):
@@ -41,8 +60,9 @@ class InventoryView:
             self.buttons.append((rect, rt, count))
 
     def draw(self):
+        """Render inventory items, backgrounds, preview icons, and remaining counts."""
         for rect, rt, count in self.buttons:
-            # 背景色
+        
             if count == 0:
                 color = (180, 180, 180)
             elif rt == self.selected_type:
@@ -65,6 +85,14 @@ class InventoryView:
             self.screen.blit(count_text, (rect.right - 25, rect.top + 2))
 
     def handle_click(self, pos):
+        """Process mouse click to select a road type.
+
+        Args:
+            pos: Mouse (x, y) coordinates
+
+        Returns:
+            Selected RoadType or None if no valid click
+        """
         for rect, rt, count in self.buttons:
             if rect.collidepoint(pos) and count != 0:
                 self.selected_type = rt
@@ -72,6 +100,14 @@ class InventoryView:
         return None
 
     def get_road_type_at(self, pos):
+        """Check which road type is under the mouse position (for drag operations).
+
+        Args:
+            pos: Mouse (x, y) coordinates
+
+        Returns:
+            RoadType if found and available, None otherwise
+        """
         for rect, rt, count in self.buttons:
             if rect.collidepoint(pos) and count != 0:
                 return rt

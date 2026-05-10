@@ -1,3 +1,6 @@
+"""Main game level view component.
+Manages map rendering, UI controls, car animation, music, dialogs, and game logic.
+"""
 import pygame as pg
 from typing import Tuple, Optional
 from view.map_view import MapView
@@ -13,7 +16,16 @@ from models.roadcell import RoadCellModel
 import os
 
 class GameLevelView:
+    """Main view controller for a single game level.
+    Integrates map, UI, car, effects, and user input handling.
+    """
     def __init__(self, screen: pg.Surface, level_model: GameLevelModel):
+        """Initialize the game level view with all UI components and dependencies.
+
+        Args:
+            screen: Pygame main display surface
+            level_model: Data model containing level state and logic
+        """
         self.hint_color = (0, 255, 0)
         self.screen = screen
         self.model = level_model
@@ -84,10 +96,15 @@ class GameLevelView:
 
         self.background = self._load_background()
 
-        # ---------- 新增：播放关卡背景音乐 ----------
+      
         self._play_level_music()
 
     def _load_background(self):
+        """Load level-specific background image based on level ID and difficulty.
+
+        Returns:
+            Scaled background surface or None if loading fails
+        """
         level = self.model.level_id
         difficulty = self.model.difficulty.name
 
@@ -103,11 +120,9 @@ class GameLevelView:
         except Exception:
             return None
 
-    # ---------- 新增：关卡音乐控制 ----------
     def _play_level_music(self):
-        """根据关卡 ID 播放对应的背景音乐（循环）"""
+        """Play background music corresponding to the current level (looping)."""
         level_id = self.model.level_id
-        # 音乐文件映射
         music_map = {
             1: "level1_forest.mp3",
             2: "level2_countryside.mp3",
@@ -117,39 +132,46 @@ class GameLevelView:
         if level_id in music_map:
             filename = music_map[level_id]
         else:
-            # 自定义关卡可选默认音乐（若不需要可注释，则无音乐）
-            filename = "custom_level.mp3"   # 可根据需要准备一个默认音乐
+        
+            filename = "custom_level.mp3"   
         music_path = os.path.join("view", "assets", "Sounds", filename)
         try:
             if pg.mixer.get_init():
                 pg.mixer.music.stop()
                 pg.mixer.music.load(music_path)
-                pg.mixer.music.play(-1)   # 循环播放
-                # 可选：设置音量
+                pg.mixer.music.play(-1)   
+              
                 pg.mixer.music.set_volume(0.5)
         except Exception as e:
             print(f"[GameLevelView] Failed to play music for level {level_id}: {e}")
 
     def stop_music(self):
-        """停止当前关卡背景音乐（供外部在离开关卡时调用）"""
+        """Stop the currently playing background music."""
         try:
             if pg.mixer.get_init():
                 pg.mixer.music.stop()
         except Exception:
             pass
-    # --------------------------------------------
+ 
 
     def show_info(self, msg: str):
+        """Show a popup dialog with a custom message.
+
+        Args:
+            msg: Text to display in the dialog
+        """
         self.info_dialog.set_message(msg)
         self.info_dialog.show()
 
     def show_pass_menu(self):
+        """Show the level completion menu with score."""
         score = self.model.score
         self.pass_menu = PassMenuView(self.screen, score, self.model.level_id)
         self.pass_menu.visible = True
         self._pass_menu_ready = True
 
     def try_autocomplete(self):
+        """Check if the map path is connected and trigger win sequence if valid."""
 
         if self.showing_win:
             return
@@ -183,6 +205,7 @@ class GameLevelView:
             print("❌ Not connected, check road orientations")
 
     def request_hint(self):
+        """Show a visual hint for the correct or suggested path on the map."""
 
         path = self.model.map.get_path()
         if path:
@@ -201,6 +224,14 @@ class GameLevelView:
                 self.show_info("No possible path found.\nAdd more roads.")
 
     def handle_event(self, event: pg.event.Event) -> Optional[str]:
+        """Process all user input events for the level.
+
+        Args:
+            event: Pygame event object
+
+        Returns:
+            Action string (e.g., 'back', 'next_level') or None
+        """
         if self.info_dialog.visible:
             if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
                 for btn in self.info_dialog.buttons:
@@ -322,6 +353,7 @@ class GameLevelView:
         return None
 
     def rotate_selected(self):
+        """Rotate the currently selected road cell on the map."""
         if self.selected_cell is None: return
         r, c = self.selected_cell
         if self.model.map.is_locked(r, c): return
@@ -329,6 +361,7 @@ class GameLevelView:
         self.model.start_timer()
 
     def remove_selected(self):
+        """Remove the selected road cell and return it to inventory."""
         if self.selected_cell is None: return
         r, c = self.selected_cell
         if self.model.map.is_locked(r, c): return
@@ -341,6 +374,7 @@ class GameLevelView:
             self.model.start_timer()
 
     def reset_all(self):
+        """Reset the entire level to its initial state."""
         self.model.reset()
         self.inventory.update_from_model(self.model.player_road_list)
         self.selected_cell = None
@@ -367,9 +401,10 @@ class GameLevelView:
                                 start_grid=start_cell)
         self.background = self._load_background()
 
-        # 注意：重置关卡不重新播放音乐，保持当前背景音乐继续
+      
 
     def update(self):
+        """Update game state, animations, and timers each frame."""
         self.model.update_time()
         self.car_view.update()
 
@@ -399,6 +434,7 @@ class GameLevelView:
                 self.victory_effect = None
 
     def draw(self):
+        """Render all visual elements to the screen."""
         if self.background:
             self.screen.blit(self.background, (0, 0))
         else:

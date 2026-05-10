@@ -3,7 +3,19 @@ import random
 import math
 
 class VictoryEffect:
+    """
+    A particle effect system that displays colorful exploding particles
+    to celebrate level victory or success events.
+    """
     def __init__(self, screen, x, y):
+        """
+        Initialize the victory explosion effect with particles.
+
+        Args:
+            screen: The Pygame surface to draw particles on
+            x: The X coordinate of the explosion center
+            y: The Y coordinate of the explosion center
+        """
         self.screen = screen
         self.particles = []
         self.timer = 0
@@ -32,6 +44,10 @@ class VictoryEffect:
             })
 
     def update(self):
+        """
+        Update particle positions, physics (gravity), lifetime, and effect timer.
+        Marks the effect as finished when duration ends.
+        """
         if self.finished:
             return
         self.timer += 1
@@ -44,6 +60,10 @@ class VictoryEffect:
             self.finished = True
 
     def draw(self):
+        """
+        Render all active particles with fade-out and shrink effects.
+        Only draws particles that are still alive.
+        """
         if self.finished:
             return
         for p in self.particles:
