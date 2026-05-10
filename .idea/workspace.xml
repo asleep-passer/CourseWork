@@ -4,20 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c3f1b254-67c0-409e-ad1a-253edcea8396" name="更改" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/view/button_view.py" beforeDir="false" afterPath="$PROJECT_DIR$/view/button_view.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/view/car_view.py" beforeDir="false" afterPath="$PROJECT_DIR$/view/car_view.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/view/dialog_view.py" beforeDir="false" afterPath="$PROJECT_DIR$/view/dialog_view.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/view/difficulty_select_view.py" beforeDir="false" afterPath="$PROJECT_DIR$/view/difficulty_select_view.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/view/game_level_view.py" beforeDir="false" afterPath="$PROJECT_DIR$/view/game_level_view.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/view/inventory_view.py" beforeDir="false" afterPath="$PROJECT_DIR$/view/inventory_view.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/view/main_menu_view.py" beforeDir="false" afterPath="$PROJECT_DIR$/view/main_menu_view.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/view/map_view.py" beforeDir="false" afterPath="$PROJECT_DIR$/view/map_view.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/view/passmenu.py" beforeDir="false" afterPath="$PROJECT_DIR$/view/passmenu.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/view/story_intro_view.py" beforeDir="false" afterPath="$PROJECT_DIR$/view/story_intro_view.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/view/victory.py" beforeDir="false" afterPath="$PROJECT_DIR$/view/victory.py" afterDir="false" />
-    </list>
+    <list default="true" id="c3f1b254-67c0-409e-ad1a-253edcea8396" name="更改" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -117,7 +104,7 @@
       <workItem from="1778326824835" duration="70000" />
       <workItem from="1778327149986" duration="209000" />
       <workItem from="1778331090778" duration="73000" />
-      <workItem from="1778377128816" duration="1080000" />
+      <workItem from="1778377128816" duration="1409000" />
     </task>
     <servers />
   </component>
