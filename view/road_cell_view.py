@@ -1,3 +1,18 @@
+"""
+roadcellview.py - Pygame view component for rendering individual road cells in a grid-based editor or simulation.
+
+This module defines the RoadCellView class, which acts as a visual wrapper for a single cell 
+in a road layout grid. It renders a semi-transparent background grid, delegates detailed road 
+tile rendering to a RoadView instance, and overlays visual indicators (borders and labels) 
+for special cell types such as start points, end points, and obstacles.
+
+The class is designed to be lightweight and state-aware: it reuses or replaces its internal 
+RoadView only when the underlying RoadCellModel changes, ensuring efficient rendering during 
+interactive editing or animation.
+
+Used in conjunction with RoadCellModel (from models.roadcell) and RoadView (from view.road).
+"""
+
 import pygame
 from models.roadcell import RoadCellModel
 from view.road import RoadView

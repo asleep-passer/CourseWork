@@ -1,3 +1,20 @@
+"""
+leveleditorview.py - Main UI module for the level editor in a road-building puzzle game.
+
+This module implements the visual interface for creating, editing, and saving custom levels.
+It includes:
+  - LevelEditorView: The main editor window with map grid, control buttons, and background.
+  - EditorInventoryView: A side panel for selecting special road types (start/end/obstacle)
+    and adjusting counts of buildable roads (straight, bend, T, cross).
+
+The editor supports:
+  - Placing and rotating road tiles via left/right mouse clicks.
+  - Validating level structure (requires at least one start and one end).
+  - Saving levels to disk in a custom text format under `config.saves_path`.
+  - Loading existing levels for modification.
+
+All rendering is done via Pygame. The module assumes a fixed 4x4 map grid.
+"""
 import pygame as pg
 import os
 from typing import Tuple, Optional, List
@@ -103,6 +120,7 @@ class EditorInventoryView:
                     self.selected_type = rt
                     return rt
 
+        # Compute vertical offset for editable roads section
         section_y = self.y + len(self.editor_types) * 60 + 20
         start_y = section_y + 40
         row_spacing = 35
@@ -148,6 +166,7 @@ class EditorInventoryView:
         title = self.font.render("Editor Tools", True, (0, 0, 0))
         self.screen.blit(title, (self.x, self.y - 45))
 
+        # Draw special tool buttons (obstacle/start/end)
         for rect, rt in self.buttons:
             if rt in self.editor_types:
                 is_selected = (rt == self.selected_type)
@@ -160,6 +179,7 @@ class EditorInventoryView:
                 text_rect = text.get_rect(center=rect.center)
                 self.screen.blit(text, text_rect)
 
+        # Draw editable road counts with +/- buttons
         section_title = self.font.render("Available Roads", True, (0, 0, 0))
         section_y = self.y + len(self.editor_types) * 60 + 20
         self.screen.blit(section_title, (self.x, section_y))
@@ -226,6 +246,8 @@ class LevelEditorView:
         w, h = screen.get_size()
         map_x = 50
         map_y = 130
+
+        # Initialize a temporary level model (ID 999 = unsaved)
         self.model = GameLevelModel(level_id=999)
         self.model.map = MapModel(rows=4, cols=4)
         self.model.player_road_list = NormalRoadListModel(10, 6, 3, 1)
@@ -429,6 +451,7 @@ class LevelEditorView:
                     rotation_rows.append(" ".join(row))
                 f.write("\n".join(rotation_rows) + "\n")
 
+                # Road counts
                 straight = self.model.player_road_list.get_road_num(RoadType.STRAIGHT_ROAD)
                 bend = self.model.player_road_list.get_road_num(RoadType.BEND_ROAD)
                 t_shape = self.model.player_road_list.get_road_num(RoadType.T_SHAPED_ROAD)
@@ -569,15 +592,18 @@ class LevelEditorView:
                          (self.map_view.x + c * 120, self.map_view.y),
                          (self.map_view.x + c * 120, self.map_view.y + 4 * 120), 1)
 
+        # Highlight selected cell
         if self.selected_cell is not None:
             r, c = self.selected_cell
             rect = pg.Rect(self.map_view.x + c * 120, self.map_view.y + r * 120, 120, 120)
             pg.draw.rect(self.screen, (255, 255, 0), rect, 3)
 
+        # Highlight selected inventory button
         if self.selected_road_type is not None:
             for rect, rt in self.inventory.buttons:
                 if rt == self.inventory.selected_type:
                     pg.draw.rect(self.screen, (255, 0, 0), rect, 3)
 
+        # Draw modal dialog if visible
         if self.info_dialog.visible:
             self.info_dialog.draw(self.screen)

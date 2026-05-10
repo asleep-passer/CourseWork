@@ -1,3 +1,20 @@
+"""
+levelselectview.py - UI module for the level selection screen in a road-building puzzle game.
+
+This module provides the LevelSelectView class, which displays two categories of levels:
+  - **Built-in Levels**: A fixed set of 4 pre-designed levels (Level 1–4).
+  - **Custom Levels**: User-created levels loaded dynamically from a save directory,
+    each offering Play, Edit, and Delete actions.
+
+The view supports:
+  - Custom background image (with fallback to solid color).
+  - Custom font loading (with graceful fallback to system default).
+  - Responsive layout for up to 12 custom levels.
+  - Click-based navigation returning semantic command strings.
+
+All rendering uses Pygame. Custom levels are expected to follow the naming convention:
+    level<N>.txt   (e.g., level5.txt, level12.txt)
+"""
 import os
 import pygame
 from typing import Optional, Tuple
@@ -109,7 +126,8 @@ class LevelSelectView:
 
         files = [f for f in os.listdir(self.saves_path) if f.startswith('level') and f.endswith('.txt')]
         nums = sorted([int(f[5:-4]) for f in files if f[5:-4].isdigit()])[:12]
-
+        
+        # Layout parameters for compact button rows
         small_btn_w, small_btn_h = 100, 35
         spacing = 8
         total_width = small_btn_w * 3 + spacing * 2
